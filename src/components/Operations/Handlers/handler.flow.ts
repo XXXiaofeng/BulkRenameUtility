@@ -58,6 +58,7 @@ export function useRenameHandler() {
 
   const debounceRename = _.debounce((options) => {
     rename(options)
+    console.log("options:", options)
   }, 500)
 
   return { debounceRename }

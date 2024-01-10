@@ -7,6 +7,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers"
 import Icons from "unplugin-icons/vite"
 import IconsResolver from "unplugin-icons/resolver"
 import Inspect from "vite-plugin-inspect"
+import fs from "fs"
 
 import handlerPluginDetector from "./src/build/handler-plugin-detector.js"
 
@@ -14,6 +15,13 @@ const pathSrc = path.resolve(__dirname, "src")
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    https: {
+      key: fs.readFileSync("localhost-key.pem"),
+      cert: fs.readFileSync("localhost.pem")
+    }
+  },
+
   resolve: {
     alias: {
       "@": pathSrc

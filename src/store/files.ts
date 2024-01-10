@@ -61,6 +61,7 @@ export const useFileStore = defineStore("files", () => {
 
     const invalidName = files.find((f) => !f.isValidName)
     if (invalidName) {
+      console.log("invalidName:", invalidName)
       throw new Error("重命名拒绝执行，存在非法文件名称")
     }
 
@@ -165,6 +166,16 @@ export const useFileStore = defineStore("files", () => {
     }
   }
 
+  function applyRenamingRules(renamingRules) {
+    for (const [originalName, newName] of Object.entries(renamingRules)) {
+      const file = files.value.find((f) => f.name === originalName)
+      if (file) {
+        file.preview = newName // Assuming preview is the property that holds the new name
+      }
+    }
+    refresh() // Refresh to trigger reactivity
+  }
+
   return {
     files,
     filteredFiles,
@@ -180,6 +191,7 @@ export const useFileStore = defineStore("files", () => {
     reload,
     refresh,
     clear,
-    updateIndex
+    updateIndex,
+    applyRenamingRules
   }
 })

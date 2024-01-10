@@ -1,8 +1,7 @@
 <template>
   <div class="header">
-
     <span class="title">
-      <img src="../assets/icon256.ico" alt="logo" width="32" height="32">
+      <img src="../assets/icon256.ico" alt="logo" width="32" height="32" />
       <h1>批量文件重命名</h1>
     </span>
 
@@ -14,32 +13,30 @@
     <span class="about">
       <img src="../assets/github.svg" alt="github" width="32" @click="onGithubClick" />
     </span>
-
   </div>
 </template>
 
 <script lang="ts" setup>
-import * as fileUtils from '@/utils/file';
-import { useFileStore } from '@/store/files';
+import * as fileUtils from "@/utils/file"
+import { useFileStore } from "@/store/files"
 
-const store = useFileStore();
+const store = useFileStore()
 
 const importFile = async () => {
-  const file = await fileUtils.importFile();
+  const file = await fileUtils.importFile()
   if (file) {
     store.addFiles([file])
   }
 }
 
 const importFolder = async () => {
-  const files = await fileUtils.importFolder();
+  const files = await fileUtils.importFolder()
   store.addFiles(files)
 }
 
 const onGithubClick = () => {
   globalThis.open("https://github.com/JasonGrass/rename", "_blank", "noreferrer")
 }
-
 </script>
 
 <style lang="less" scoped>
@@ -55,7 +52,6 @@ const onGithubClick = () => {
   border-bottom: solid 1px #e6e6e6;
   box-shadow: 0px 10px 5px -10px #e6e6e6;
 }
-
 
 .title {
   display: flex;
@@ -83,6 +79,5 @@ const onGithubClick = () => {
 
 .file-loader {
   margin-left: -120px;
-
 }
 </style>
