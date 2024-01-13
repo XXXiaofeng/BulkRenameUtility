@@ -8,6 +8,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActionContainer: typeof import('./components/Operations/Action/ActionContainer.vue')['default']
+    Blog: typeof import('./components/blog.vue')['default']
+    copy: typeof import('./components/Footer copy.vue')['default']
     DialogueInterface: typeof import('./components/DialogueInterface.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -26,6 +28,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    Faq: typeof import('./components/Faq.vue')['default']
     FileFilter: typeof import('./components/Operations/Filter/FileFilter.vue')['default']
     FileFilterSelector: typeof import('./components/Operations/Filter/FileFilterSelector.vue')['default']
     FilesTable: typeof import('./components/Operations/TableView/FilesTable.vue')['default']
@@ -33,9 +36,14 @@ declare module 'vue' {
     HandlerContainer: typeof import('./components/Operations/Handlers/HandlerContainer.vue')['default']
     HandlerMenu: typeof import('./components/HandlerMenu.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
+    LanguageSwitcher: typeof import('./components/LanguageSwitcher.vue')['default']
     Operations: typeof import('./components/Operations/Operations.vue')['default']
     OperationWrapper: typeof import('./components/Operations/OperationWrapper.vue')['default']
     PluginLoadError: typeof import('./components/Utils/PluginLoadError.vue')['default']
     PluginLoading: typeof import('./components/Utils/PluginLoading.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
+    Statistics: (typeof import("./components/Statistics.vue"))["default"]
+    Upload: typeof import('./components/Upload.vue')['default']
   }
 }

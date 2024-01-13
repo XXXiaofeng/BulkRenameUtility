@@ -1,89 +1,128 @@
 <template>
   <div>
-
-    <div class="postion-select">
-      <el-select v-model="position" placeholder="插入字符的位置">
-        <el-option v-for="item in positionOptions" :key="item.value" :label="item.label" :value="item.value" />
+    <div class="position-select">
+      <el-select v-model="position" placeholder="Position for Inserting Characters">
+        <el-option
+          v-for="item in positionOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value" />
       </el-select>
-      <el-input-number v-show='position === "afterIndexN" || position === "beforeIndexN"' style="width: 220px;"
-        v-model="postionIndex" :min="0" placeholder="设置 N 的取值"></el-input-number>
-      <el-input v-show='position === "afterStr" || position === "beforeStr"' style="width: 360px;" v-model="postionStr"
-        placeholder="设置字符串 XX 的取值"></el-input>
+      <el-input-number
+        v-show="position === 'afterIndexN' || position === 'beforeIndexN'"
+        style="width: 220px"
+        v-model="positionIndex"
+        :min="0"
+        placeholder="Set the value of N"></el-input-number>
+      <el-input
+        v-show="position === 'afterStr' || position === 'beforeStr'"
+        style="width: 360px"
+        v-model="positionStr"
+        placeholder="Set the value of string XX"></el-input>
     </div>
 
-    <div style="margin:12px 0">
-      <el-radio-group v-model="intertContentType">
-        <el-radio-button label="text">文本</el-radio-button>
-        <el-radio-button label="index">序号</el-radio-button>
+    <div style="margin: 12px 0">
+      <el-radio-group v-model="insertContentType">
+        <el-radio-button label="text">Text</el-radio-button>
+        <el-radio-button label="index">Index</el-radio-button>
       </el-radio-group>
     </div>
 
-    <el-input style="max-width: 800px;" v-show='intertContentType === "text"' v-model="insertText"
-      placeholder="插入的文本内容"></el-input>
+    <el-input
+      style="max-width: 800px"
+      v-show="insertContentType === 'text'"
+      v-model="insertText"
+      placeholder="Inserted Text Content"></el-input>
 
-    <div class="insert-index-wrapper" v-show='intertContentType === "index"'>
-      <el-input style="max-width: 240px;" v-model="insertIndexPreText" placeholder="序号前面的文本"></el-input>
+    <div class="insert-index-wrapper" v-show="insertContentType === 'index'">
+      <el-input
+        style="max-width: 240px"
+        v-model="insertIndexPreText"
+        placeholder="Text Before Index"></el-input>
       <span class="insert-index-type-wrapper">
-
-        <el-tooltip content="开始序号" placement="top">
-          <el-input-number v-model="insertIndexBaseNumber" controls-position="right" placeholder="开始序号" />
+        <el-tooltip content="Start Index" placement="top">
+          <el-input-number
+            v-model="insertIndexBaseNumber"
+            controls-position="right"
+            placeholder="Start Index" />
         </el-tooltip>
 
-        <el-select v-model="insertIndexNumberType" placeholder="序号类型">
-          <el-option v-for="item in insertContentTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="insertIndexNumberType" placeholder="Index Type">
+          <el-option
+            v-for="item in insertContentTypeOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value" />
         </el-select>
 
-        <el-tooltip content="固定位数" placement="right">
-          <el-input-number v-model="insertIndexDigitPadding" :min="1" :max="10" controls-position="right"
-            placeholder="固定位数" v-show='insertIndexNumberType === "digit"' />
+        <el-tooltip content="Fixed Length" placement="right">
+          <el-input-number
+            v-model="insertIndexDigitPadding"
+            :min="1"
+            :max="10"
+            controls-position="right"
+            placeholder="Fixed Length"
+            v-show="insertIndexNumberType === 'digit'" />
         </el-tooltip>
-
       </span>
-      <el-input style="max-width: 240px;" v-model="insertIndexAfterText" placeholder="序号后面的文本"></el-input>
+      <el-input
+        style="max-width: 240px"
+        v-model="insertIndexAfterText"
+        placeholder="Text After Index"></el-input>
     </div>
-
   </div>
 </template>
 
 <script lang="ts" setup>
+const positionOptions = [
+  {
+    label: "Beginning Position",
+    value: "begin"
+  },
+  {
+    label: "End Position",
+    value: "end"
+  },
+  {
+    label: "After Nth Character",
+    value: "afterIndexN"
+  },
+  {
+    label: "Before Nth Character from the End",
+    value: "beforeIndexN"
+  },
+  {
+    label: "After String XX",
+    value: "afterStr"
+  },
+  {
+    label: "Before String XX",
+    value: "beforeStr"
+  }
+]
 
-const positionOptions = [{
-  label: "开始位置",
-  value: "begin"
-}, {
-  label: "末尾位置",
-  value: "end"
-}, {
-  label: "第 N 个字符之后",
-  value: "afterIndexN"
-}, {
-  label: "倒数 N 个字符之前",
-  value: "beforeIndexN"
-}, {
-  label: "XX 字符串之后",
-  value: "afterStr"
-},
-{
-  label: "XX 字符串之前",
-  value: "beforeStr"
-}]
-
-const insertContentTypeOptions = [{
-  label: "阿拉伯数字",
-  value: "digit"
-}, {
-  label: "小写中文数字",
-  value: "lowerChinese"
-}, {
-  label: "大写中文数字",
-  value: "upperChinese"
-}, {
-  label: "英文小写字母",
-  value: "lowerChar"
-}, {
-  label: "英文大写字母",
-  value: "upperChar"
-}]
+const insertContentTypeOptions = [
+  {
+    label: "Arabic Numerals",
+    value: "digit"
+  },
+  {
+    label: "Lowercase Chinese Numerals",
+    value: "lowerChinese"
+  },
+  {
+    label: "Uppercase Chinese Numerals",
+    value: "upperChinese"
+  },
+  {
+    label: "Lowercase English Letters",
+    value: "lowerChar"
+  },
+  {
+    label: "Uppercase English Letters",
+    value: "upperChar"
+  }
+]
 
 const position = ref("")
 const postionIndex = ref()
@@ -115,7 +154,6 @@ watchEffect(() => {
   }
   emits("submit", options)
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -123,7 +161,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
 
-  &>* {
+  & > * {
     margin-right: 12px;
   }
 }
@@ -132,7 +170,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
 
-  &>* {
+  & > * {
     margin-right: 12px;
   }
 }
@@ -146,13 +184,12 @@ watchEffect(() => {
   border: 1px solid #eee;
   border-radius: 4px;
 
-  &>* {
+  & > * {
     width: 160px;
   }
 
-  &>*:nth-child(n+2) {
+  & > *:nth-child(n + 2) {
     margin-top: 6px;
   }
-
 }
 </style>

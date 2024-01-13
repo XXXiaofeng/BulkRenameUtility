@@ -1,18 +1,17 @@
 <template>
   <div>
-
     <div class="handler-settings">
-      <el-checkbox v-model="enabled" label="启用规则" border></el-checkbox>
-      <el-tooltip content="默认情况下，只处理不包含后缀名的文件名部分" placement="top">
-        <el-checkbox v-model="containExt" label="同时处理后缀名" border></el-checkbox>
+      <el-checkbox v-model="enabled" label="Enable Rule" border></el-checkbox>
+      <el-tooltip
+        content="By default, it only processes the part of the file name that does not include the extension"
+        placement="top">
+        <el-checkbox v-model="containExt" label="Also Process Extension" border></el-checkbox>
       </el-tooltip>
-
     </div>
 
     <KeepAlive>
       <component :is="currentHandler?.component" @submit="onRenameHandlerSubmit"></component>
     </KeepAlive>
-
   </div>
 </template>
 
@@ -20,8 +19,8 @@
 import { useFileStore } from "@/store/files"
 import { storeToRefs } from "pinia"
 
-import HandlerFactory from '@/lib/handler/HandlerFactory';
-import { useRenameHandler } from './handler.flow';
+import HandlerFactory from "@/lib/handler/HandlerFactory"
+import { useRenameHandler } from "./handler.flow"
 
 // 动态组件，根据当前选中的重命名操作，显示对应 UI
 const { currentHandler } = defineProps<{
@@ -34,11 +33,11 @@ const { debounceRename } = useRenameHandler()
 // 判断当前选中的重命名操作，是否可用
 const enabled = computed({
   get: () => {
-    const h = handlers.find(h => h.active)
+    const h = handlers.find((h) => h.active)
     return h?.enable ?? false
   },
   set: (v) => {
-    const h = handlers.find(h => h.active)
+    const h = handlers.find((h) => h.active)
     if (h) {
       h.enable = v
     }
@@ -49,11 +48,11 @@ const enabled = computed({
 // 判断当前选中的重命名操作，是否合并处理后缀名
 const containExt = computed({
   get: () => {
-    const h = handlers.find(h => h.active)
+    const h = handlers.find((h) => h.active)
     return h?.containExt ?? false
   },
   set: (v) => {
-    const h = handlers.find(h => h.active)
+    const h = handlers.find((h) => h.active)
     if (h) {
       h.containExt = v
     }
@@ -72,17 +71,14 @@ const { filteredFiles } = storeToRefs(fileStore)
 watch(filteredFiles, () => {
   debounceRename(undefined)
 })
-
 </script>
 
 <style lang="less" scoped>
 .handler-settings {
   margin: 4px 0 12px 0;
 
-  &>label {
+  & > label {
     margin-right: 12px;
   }
-
 }
 </style>
-

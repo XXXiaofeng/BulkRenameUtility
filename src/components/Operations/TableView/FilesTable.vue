@@ -1,65 +1,77 @@
 <template>
   <div>
-    <div class="filters">
-      <el-checkbox v-model="isShowFolder" label="显示目录" border />
-      <el-checkbox v-model="isOnlyPreview" label="仅显示预览" border />
-      <el-checkbox v-model="isOnlyEffected" label="仅显示受影响的文件" border />
-    </div>
+    <span>
+      Total Imports: {{ total }}&nbsp;&nbsp;&nbsp&nbsp;Affected Count:
+      {{ effectedFileCount }}&nbsp;&nbsp;&nbsp;&nbsp;Filter Results: {{ selectedCount }}
+    </span>
 
+    <span class="working-file-span" v-if="waitRenameCount > 0"
+      >Waiting for File Renaming: {{ waitRenameCount }} ; Successful Count:
+      {{ successRenameCount }} ; Failed Count: {{ failRenameCount }} ; Currently Renaming:
+      {{ renameWorkingFile?.name ?? "" }}</span
+    >
+
+    <div class="filters">
+      <el-checkbox v-model="isShowFolder" label="Show Folders" border />
+      <el-checkbox v-model="isOnlyPreview" label="Show Previews Only" border />
+      <el-checkbox v-model="isOnlyEffected" label="Show Only Affected Files" border />
+    </div>
+  </div>
+  <div class="w-full">
     <!-- 表格组件 -->
     <vxe-table
       :data="data"
       class="table"
-      max-height="300%"
+      max-height="500px"
       stripe
       border="inner"
-      empty-text="尚未加载任何文件"
+      empty-text="No files loaded yet"
       @sort-change="onSortChange"
       :row-class-name="rowClass"
-      ref="tableRef">
-      <!-- 序号列 -->
+      ref="tableRef"
+      fit>
+      <!-- Index Column -->
       <vxe-column
         field="index"
         :formatter="indexFormatter"
-        title="序号"
+        title="Index"
         width="60"
         align="center"></vxe-column>
-      <!-- 文件名列 -->
+      <!-- File Name Column -->
       <vxe-column
         field="name"
         class-name="text-pre"
-        title="文件名"
+        title="File Name"
         sortable
         align="left"></vxe-column>
-      <!-- 修改时间列 -->
+      <!-- Modify Time Column -->
       <vxe-column
         :visible="!isOnlyPreview"
         field="modifyTime"
-        :formatter="timeFormater"
-        title="修改时间"
-        width="180"
+        :formatter="timeFormatter"
+        title="Modify Time"
         sortable
         align="center"></vxe-column>
-      <!-- 大小列 -->
+      <!-- Size Column -->
       <vxe-column
         :visible="!isOnlyPreview"
         field="size"
         :formatter="sizeFormatter"
-        title="大小"
+        title="Size"
         width="100"
         sortable
         align="center"></vxe-column>
-      <!-- 目录列（如果需要显示目录的话） -->
+      <!-- Folder Column (if folder display is needed) -->
       <vxe-column
         :visible="isShowFolder && !isOnlyPreview"
         field="folder"
-        title="目录"
+        title="Folder"
         sortable
         align="right"></vxe-column>
-      <!-- 预览列 -->
+      <!-- Preview Column -->
       <vxe-column
         field="preview"
-        title="预览"
+        title="Preview"
         align="left"
         :class-name="previewCellClass"></vxe-column>
     </vxe-table>
@@ -74,7 +86,21 @@ import { useFileStore } from "@/store/files"
 import { storeToRefs } from "pinia"
 
 const fileStore = useFileStore()
+
+const {
+  total,
+  selectedCount,
+  waitRenameCount,
+  successRenameCount,
+  failRenameCount,
+  renameWorkingFile
+} = storeToRefs(fileStore)
 const { filteredFiles } = storeToRefs(fileStore)
+
+const effectedFileCount = computed(() => {
+  const files = filteredFiles.value
+  return files.filter((f) => f.name !== f.preview).length
+})
 
 const isOnlyEffected = ref(false)
 
@@ -199,17 +225,15 @@ watch(data, () => {
   color: #f56c6c;
 }
 
-.text-pre {
-  .vxe-cell--label {
-    white-space: pre;
-  }
-}
-
 tr.row-name-changed-color-1 {
   background-color: #d9ecff !important;
 }
 
 tr.row-name-changed-color-2 {
   background-color: #c6e2ff !important;
+}
+
+.table {
+  width: 100%;
 }
 </style>

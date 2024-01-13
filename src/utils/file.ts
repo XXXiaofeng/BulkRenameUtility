@@ -104,7 +104,7 @@ function buildFile(
     folder: folder,
     parent: parent,
     handle,
-    isValidName: false,
+    isValidName: true,
     error: "",
     index: 0,
     hash: calcHash(file)
@@ -130,9 +130,11 @@ export function isValidFilename(filename: string): boolean {
   const reservedNames = /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(\..*)?$/i
   // 检查文件名是否以点或空格结束（Windows限制）
   const isTrailingDotOrSpace = /[\. ]$/
-  console.log("!invalidChars.test(filename):", !invalidChars.test(filename))
-  console.log("!reservedNames.test(filename):", !reservedNames.test(filename))
-  console.log("!isTrailingDotOrSpace.test(filename):", !isTrailingDotOrSpace.test(filename))
+  // // 打印日志以查看哪条规则触发了无效文件名
+  // console.log("!invalidChars.test(filename):", !invalidChars.test(filename))
+  // console.log("!reservedNames.test(filename):", !reservedNames.test(filename))
+  // console.log("!isTrailingDotOrSpace.test(filename):", !isTrailingDotOrSpace.test(filename))
+
   // 进行检查
   return (
     !invalidChars.test(filename) &&

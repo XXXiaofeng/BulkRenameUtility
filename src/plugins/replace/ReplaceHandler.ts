@@ -21,7 +21,7 @@ interface IReplaceHandlerOptions {
 }
 
 class Handler extends RenameHandlerBase<IReplaceHandlerOptions> implements IRenameHandler {
-  public title: string = "删除/替换字符"
+  public title: string = "Del/Replace"
   public component: Component = importPluginComponent("replace", "ReplaceConfiguration")
   public sortHint = 1
 

@@ -1,28 +1,18 @@
 <template>
   <!-- 包含操作的根组件 -->
   <div>
-    <!-- 操作包装器，可以折叠，标题为"文件过滤" -->
-    <OperationWrapper :canFold="true" title="文件过滤">
-      <!-- 文件过滤组件，用于筛选文件 -->
+    <!-- Operation wrapper that can be collapsed, titled "File Filtering" -->
+    <OperationWrapper :canFold="true" title="File Filtering (optional)">
+      <!-- File filter component for filtering files -->
       <FileFilter></FileFilter>
     </OperationWrapper>
 
-    <!-- 如果当前存在处理器（currentHandler不为空），则显示操作包装器 -->
-    <OperationWrapper v-if="Boolean(currentHandler)" :canFold="true" :title="currentHandler?.title">
-      <!-- 处理器容器组件，根据当前处理器显示不同内容 -->
+    <!-- Display the operation wrapper if there is a current handler (currentHandler is not empty) -->
+    <OperationWrapper :canFold="true" title="Select Rename Rules (Drag to Change Execution Order)">
+      <HandlerMenu class="menu"></HandlerMenu>
+
+      <!-- Handler container component that displays different content based on the current handler -->
       <HandlerContainer :currentHandler="currentHandler"></HandlerContainer>
-    </OperationWrapper>
-
-    <!-- 操作包装器，用于包含操作按钮等 -->
-    <OperationWrapper>
-      <!-- 操作容器组件，包含各种操作按钮 -->
-      <ActionContainer></ActionContainer>
-    </OperationWrapper>
-
-    <!-- 操作包装器，标题为"文件列表/结果预览" -->
-    <OperationWrapper title="文件列表/结果预览">
-      <!-- 文件表格组件，用于显示文件列表或结果预览 -->
-      <FilesTable></FilesTable>
     </OperationWrapper>
   </div>
 </template>
@@ -49,4 +39,8 @@ onMounted(() => {
 })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.button-container {
+  margin-top: 15px;
+}
+</style>

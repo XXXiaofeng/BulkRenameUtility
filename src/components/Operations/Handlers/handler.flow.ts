@@ -52,6 +52,8 @@ export function useRenameHandler() {
       const newName = ctx.name + ctx.extension
       // 判断新文件名是否合法
       file.isValidName = isValidFilename(newName)
+      // console.log("file.isValidName:", file.isValidName)
+
       return newName
     })
   }

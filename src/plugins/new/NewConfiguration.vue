@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <el-input v-model="pattern" placeholder="输入全新的命名规则，使用 <> 引用变量，如果 <name>，点击 Help 查看帮助 →→→→"></el-input>
+    <el-input
+      v-model="pattern"
+      placeholder="Enter a completely new naming rule, use <> to reference variables, e.g., <name>. Click Help for assistance →→→→"></el-input>
     <el-button type="primary" @click="onHelpClick">Help</el-button>
   </div>
 
@@ -8,36 +10,49 @@
     <Transition name="help">
       <div class="help-container" v-if="isHelpContentShow">
         <div class="help-content">
-          <h3 class="title">变量定义</h3>
+          <h3 class="title">Variable Definitions</h3>
           <div class="content">
             <span class="content-line">
-              <span class="variable">&lt;name&gt;</span> 原文件名(不含后缀); <span class="variable">&lt;ext&gt;</span> 原后缀名; 可以使用
-              :upper 或 :lower 转换大小写
+              <span class="variable">&lt;name&gt;</span> Original file name (excluding extension);
+              <span class="variable">&lt;ext&gt;</span> Original file extension; can use :upper or
+              :lower to change case
             </span>
             <span class="content-line">
-              <span class="variable">&lt;#:1&gt;</span> 编号,基数为1(默认),固定位数则使用多个 #, 如 <span
-                class="variable">&lt;####&gt;</span>
+              <span class="variable">&lt;#:1&gt;</span> Number, with a base of 1 (default); for
+              fixed width, use multiple #, e.g., <span class="variable">&lt;####&gt;</span>
             </span>
             <span class="content-line">
-              <span class="variable">&lt;date&gt;</span>/<span class="variable">&lt;date.now&gt;</span> 当前日期;
-              <span class="variable">&lt;date.modify&gt;</span> 文件最后修改日期
+              <span class="variable">&lt;date&gt;</span>/<span class="variable"
+                >&lt;date.now&gt;</span
+              >
+              Current date; <span class="variable">&lt;date.modify&gt;</span> Last modification date
+              of the file
             </span>
             <span class="content-line">
-              <span class="variable">&lt;time&gt;</span>/<span class="variable">&lt;time.now&gt;</span> 当前时间;
-              <span class="variable">&lt;time.modify&gt;</span> 文件最后修改时间
+              <span class="variable">&lt;time&gt;</span>/<span class="variable"
+                >&lt;time.now&gt;</span
+              >
+              Current time; <span class="variable">&lt;time.modify&gt;</span> Last modification time
+              of the file
             </span>
             <span class="content-line">
-              日期和时间可以使用格式化字符串，如 <span class="variable">&lt;date.modify:YYYY-MM-DD&gt;</span> /
-              <span class="variable">&lt;time:HH-mm-ss&gt;</span> <a href="https://day.js.org/docs/zh-CN/display/format"
-                target="_blank" referrerpolicy="no-referrer">文档参考</a>
+              Dates and times can use formatting strings, e.g.,
+              <span class="variable">&lt;date.modify:YYYY-MM-DD&gt;</span> /
+              <span class="variable">&lt;time:HH-mm-ss&gt;</span>
+              <a
+                href="https://day.js.org/docs/en/display/format"
+                target="_blank"
+                referrerpolicy="no-referrer"
+                >Documentation Reference</a
+              >
             </span>
 
             <span class="content-line">
-              <span class="variable">&lt;uuid:8:upper&gt;</span> 随机字符串，可以使用 :8 指定长度，最长 32，添加 :upper 可以转换成大写
+              <span class="variable">&lt;uuid:8:upper&gt;</span> Random string; specify length with
+              :8, up to a maximum of 32; add :upper to convert to uppercase
             </span>
           </div>
         </div>
-
       </div>
     </Transition>
   </Teleport>
@@ -51,7 +66,7 @@ const emits = defineEmits(["submit"])
 
 watchEffect(() => {
   const options = {
-    pattern: pattern.value,
+    pattern: pattern.value
   }
   emits("submit", options)
 })
@@ -63,7 +78,6 @@ const onHelpClick = () => {
 onDeactivated(() => {
   isHelpContentShow.value = false
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -71,7 +85,7 @@ onDeactivated(() => {
   display: flex;
 
   button {
-    margin: 0 4px 0 12px
+    margin: 0 4px 0 12px;
   }
 }
 
@@ -85,7 +99,7 @@ onDeactivated(() => {
   line-height: 22px;
 
   .variable {
-    color: #337ecc
+    color: #337ecc;
   }
 }
 
@@ -95,22 +109,22 @@ onDeactivated(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-
 }
 
 .help-container {
-
+  background-color: white;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 2;
-
+  top: 500px;
+  left: 100px;
+  right: 100px;
+  z-index: 999;
+  border: 2px solid #eee;
   height: 170px;
   max-height: 20vh;
-  backdrop-filter: blur(6px);
-  background-color: rgba(255, 255, 255, 0.6);
-
+  border-radius: 10px;
+  width: 50%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .help-enter-active,

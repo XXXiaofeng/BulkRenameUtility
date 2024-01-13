@@ -6,7 +6,7 @@ interface IJscodeConfiguration {
 }
 
 class Handler extends RenameHandlerBase<IJscodeConfiguration> implements IRenameHandler {
-  public title: string = "自定义 JS"
+  public title: string = "Custom JS"
   public component: Component = importPluginComponent("jscode", "JscodeConfiguration")
   public sortHint = 101
 

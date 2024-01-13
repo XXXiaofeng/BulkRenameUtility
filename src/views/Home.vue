@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { ElMessageBox } from "element-plus"
-import { useI18n } from "vue-i18n"
-const { t } = useI18n()
 
 // 创建响应式变量来控制当前的模式
 const mode = ref("simple") // 默认为简易模式
@@ -58,52 +56,52 @@ const checkIsMobile = () => {
 <template>
   <!-- 如果不是移动设备，则渲染以下内容 -->
 
-  <div
-    class="fixed z-10 w-full h-12 leading-6 text-black bg-white border-t-0 border-b border-solid border-x-0 border-slate-200 bg-opacity-[0.6]"
-    style="backdrop-filter: saturate(50%) contrast(2) blur(5px); border-width: 0px">
-    <header
-      class="flex justify-between items-center px-2 pb-0 mt-1 w-full leading-6 text-black sm:px-4">
+  <div class="flex flex-col justify-center py-0 px-4 mx-auto leading-6 text-black" v-if="!isMobile">
+    <div
+      class="mx-60 pt-40 text-4xl font-bold leading-10 text-center sm:text-6xl sm:leading-none text-slate-900">
+      <h1>Bulk Rename Utility: Free Online File Renaming Tool with AI</h1>
+    </div>
+    <div
+      class="mx-40 border rounded-xl my-20 px-20 flex flex-col justify-center leading-6 text-black shadow-xl">
       <div
-        class="max-w-[1920px] w-full mx-auto h-16 md:h-12 flex items-center px-[180px] 2xl:px-8 sm:px-3 xl:justify-between">
-        <div
-          class="w-fit flex items-center my-0 mr-0 ml-3 text-2xl font-extralight tracking-tight leading-8 text-black cursor-pointer font-medium">
-          <img src="/favicon.ico" alt="Logo" class="w-6 mr-2" />
-          <router-link class="" to="/" title="Bulk Rename Utility">{{
-            t("bulk-rename-utility")
-          }}</router-link>
-        </div>
-
-        <div class="flex items-center gap-x-6">
-          <router-link
-            class="custom-link block w-full h-full py-5"
-            title="Bulk Rename Utility"
-            to="/"
-            >HOME</router-link
-          >
-          <router-link
-            class="custom-link block w-full h-full py-5"
-            title="Bulk Rename Utility BLOG"
-            to="/blog"
-            >BLOG</router-link
-          >
-        </div>
-        <LanguageSwitcher />
+        class="text-2xl font-bold mb-5 flex justify-center mt-10 leading-6 text-center text-black">
+        1. Import File or Folder
       </div>
-    </header>
-  </div>
-  <router-view />
-  <Footer></Footer>
+      <div class="flex justify-center leading-6 text-center text-black mb-2">
+        <Upload></Upload>
+      </div>
+      <OperationWrapper>
+        <FilesTable></FilesTable>
+      </OperationWrapper>
 
-  <!-- 如果是移动设备，则渲染以下内容 -->
-  <div class="app-mobile" v-if="isMobile">
-    <!-- 工具Logo和标题 -->
-    <img class="logo" src="@/assets/icon256.ico" alt="logo" width="128" height="128" />
-    <el-text class="text">Bulk Rename Utility: Free Online File Renaming Tool with AI</el-text>
-    <el-text class="text"
-      >This tool is not supported on mobile, please open it on your computer with the latest version
-      of Chrome/Edge browser.</el-text
-    >
+      <div
+        class="text-2xl font-bold mb-5 flex justify-center mt-5 leading-6 text-center text-black">
+        2. Selecting renaming method
+      </div>
+      <div class="flex justify-center leading-6 text-center text-black">
+        <el-radio-group v-model="mode" class="bg-white">
+          <el-radio-button label="simple"> AI Mode </el-radio-button>
+          <el-radio-button label="advanced"> Rule Mode</el-radio-button>
+        </el-radio-group>
+      </div>
+      <!-- 简易模式：对话界面组件 -->
+      <div v-if="mode === 'simple'">
+        <DialogueInterface></DialogueInterface>
+      </div>
+
+      <!-- 复杂模式：原有的操作界面 -->
+      <div v-else>
+        <Operations class="operation"></Operations>
+      </div>
+
+      <div
+        class="text-2xl font-bold mb-5 flex justify-center mt-10 leading-6 text-center text-black">
+        3. Execute file renaming
+      </div>
+      <ActionContainer></ActionContainer>
+    </div>
   </div>
+  <Faq></Faq>
 </template>
 
 <style scoped>
@@ -168,14 +166,5 @@ const checkIsMobile = () => {
   .github {
     margin-top: 64px;
   }
-}
-
-.custom-link {
-  color: rgb(196, 196, 196); /* 默认颜色 */
-}
-
-.router-link-active {
-  color: #000000; /* 文字颜色 */
-  font: medium; /* 文字颜色 */
 }
 </style>

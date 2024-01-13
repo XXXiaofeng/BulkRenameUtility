@@ -2,9 +2,9 @@
   <!-- Vue组件的根部分 -->
   <div>
     <!-- Element-Plus的菜单组件，用于显示可拖拽的操作处理器列表 -->
-    <el-menu :default-active="defaultActiveItemId" @select="onMenuSelected">
+    <el-menu :default-active="defaultActiveItemId" @select="onMenuSelected" mode="horizontal">
       <!-- Vue3 Smooth DnD的容器组件，用于包裹可拖拽的元素 -->
-      <Container @drop="onDrop">
+      <Container :orientation="'horizontal'">
         <!-- 使用v-for循环渲染handlers数组中的处理器列表 -->
         <Draggable v-for="handler of handlers" :key="handler.id">
           <!-- Element-Plus的菜单项，每个对应一个处理器 -->

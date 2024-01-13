@@ -1,0 +1,5 @@
+{
+  "locales": ["en", "zh", "de", "fr"],
+  "localeDir": "./src/locales",
+  "keyPrefix": ""
+}

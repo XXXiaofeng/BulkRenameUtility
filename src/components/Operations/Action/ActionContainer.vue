@@ -1,20 +1,33 @@
 <template>
-  <div>
-    <el-button type="primary" @click="onExecute">执行</el-button>
+  <div v-if="hasFiles" class="flex justify-center mb-20 text-center text-black">
+    <button
+      class="py-1 px-4 text-center text-white rounded cursor-pointer bg-black"
+      @click="onExecute">
+      Execute
+    </button>
 
-    <el-popconfirm title="确认清空所有文件?" width="200" @confirm="onClean">
-      <template #reference>
-        <el-button type="danger">清空</el-button>
-      </template>
-    </el-popconfirm>
+    <!-- 使用 margin 添加水平间距 -->
+    <button
+      class="py-1 px-4 ml-4 text-center text-white rounded cursor-pointer bg-black"
+      @click="onClean">
+      Clear Files
+    </button>
 
-    <el-button @click="onRefresh">刷新</el-button>
-    <!-- <el-button @click="onHelp">帮助</el-button> -->
+    <!-- 使用 margin 添加水平间距 -->
+    <button
+      class="py-1 px-4 ml-4 text-center text-white rounded cursor-pointer bg-black"
+      @click="onRefresh">
+      Refresh
+    </button>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useFileStore } from '@/store/files';
+import { computed } from "vue"
+import { useFileStore } from "@/store/files"
+
+// Computed property to check if there are files in the store
+const hasFiles = computed(() => fileStore.$state.files.length > 0)
 
 const fileStore = useFileStore()
 
@@ -22,12 +35,12 @@ const onExecute = async () => {
   try {
     const [success, fail] = await fileStore.renameExecute()
     if (success > 0) {
-      ElMessage.success(`成功修改 ${success} 个文件的文件名`)
-      console.log(`成功修改 ${success} 个文件的文件名`)
+      ElMessage.success(`Successfully modified the names of ${success} files`)
+      console.log(`Successfully modified the names of ${success} files`)
     }
     if (fail > 0) {
-      ElMessage.error(`有 ${fail} 个文件重命名失败`)
-      console.log(`有 ${fail} 个文件重命名失败`)
+      ElMessage.error(`Failed to rename ${fail} files`)
+      console.log(`Failed to rename ${fail} files`)
     }
   } catch (error: any) {
     ElMessage.error(error.message)
@@ -38,29 +51,24 @@ const onClean = () => {
   fileStore.clear()
   ElMessage({
     showClose: true,
-    message: "清空完成",
+    message: "Clearing completed",
     type: "success"
-  });
+  })
 }
 
 const onRefresh = async () => {
   if (fileStore.$state.files.length === 0) {
     ElMessage({
       showClose: true,
-      message: "没有任何可以刷新的文件",
+      message: "No files to refresh",
       type: "warning"
-    });
+    })
     return
   }
 
   await fileStore.reload()
-  ElMessage.success("刷新完成");
+  ElMessage.success("Refresh completed")
 }
-
 </script>
 
-<style lang="less" scoped>
-button {
-  width: 80px;
-}
-</style>
+<style lang="less" scoped></style>

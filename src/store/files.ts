@@ -2,6 +2,7 @@ import { defineStore } from "pinia"
 import { useFilterStore } from "./filters"
 import { calcHash } from "@/utils/file"
 import { ElNotification } from "element-plus"
+import { isValidFilename } from "@/utils/file"
 
 export const useFileStore = defineStore("files", () => {
   const filterStore = useFilterStore()
@@ -170,7 +171,8 @@ export const useFileStore = defineStore("files", () => {
     for (const [originalName, newName] of Object.entries(renamingRules)) {
       const file = files.value.find((f) => f.name === originalName)
       if (file) {
-        file.preview = newName // Assuming preview is the property that holds the new name
+        file.preview = newName
+        file.isValidName = isValidFilename(newName)
       }
     }
     refresh() // Refresh to trigger reactivity

@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
 }
@@ -17,4 +21,32 @@ h6 {
   src: url("./assets/fonts/SmileySans-Oblique.ttf.woff2") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+/* Change the button color */
+.el-button {
+  background-color: black !important;
+  border-color: black !important;
+  color: white !important; /* Assuming you want the text color to be white */
+}
+
+/* Change the border color of unchecked checkboxes */
+.el-checkbox__input .el-checkbox__inner {
+  border-color: black !important;
+}
+
+/* Change the background and border color of checked checkboxes */
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: black !important;
+  border-color: black !important;
+}
+
+.el-checkbox.is-bordered {
+  border-color: gainsboro !important;
+}
+
+/* Change the text color of the checkbox label */
+.el-checkbox__label {
+  color: black !important;
+  border-color: black !important;
 }

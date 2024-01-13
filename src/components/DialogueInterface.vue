@@ -1,18 +1,25 @@
 <template>
   <div>
-    <!-- User input box -->
-    <textarea v-model="userInput" placeholder="Describe your renaming requirements here"></textarea>
-    <!-- Submit button -->
-    <button v-show="!loading" @click="submitToGemini">Submit</button>
-    <div v-if="loading">Loading...</div>
-    <!-- Interrupt button -->
-    <button v-show="loading" @click="interruptLoading">Interrupt Loading</button>
-    <!-- File table component, displays the list of renamed files -->
-    <FilesTable :files="renamedFiles"></FilesTable>
-    <OperationWrapper>
-      <!-- Operation container component, contains various operation buttons -->
-      <ActionContainer></ActionContainer>
-    </OperationWrapper>
+    <div class="input-container">
+      <textarea
+        v-model="userInput"
+        rows="4"
+        class="py-1 px-2 my-5 mx-0 w-full whitespace-pre-wrap break-words bg-white rounded-md border border-gray-300 border-solid cursor-text resize-y"
+        placeholder="For example: Add a number before the file name"
+        style="box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px"></textarea>
+
+      <div v-if="!loading" class="flex justify-center mt-0">
+        <button
+          @click="submitToGemini"
+          class="py-1 px-8 text-center text-white normal-case bg-none rounded cursor-pointer bg-black bg-opacity-[0.8]">
+          Submit
+        </button>
+      </div>
+      <div v-if="loading" class="flex justify-center mt-0">
+        <p>AI is thinking...</p>
+        <el-button @click="interruptLoading" class="stop-button">Stop</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -26,7 +33,7 @@ const fileStore = useFileStore()
 const userInput = ref("")
 const renamedFiles = ref([])
 const loading = ref(false)
-const { debounceRename } = useRenameHandler()
+let interruptController = null
 let shouldStop = false
 
 watch(
@@ -41,8 +48,10 @@ const submitToGemini = async () => {
   loading.value = true
   const fileNames = fileStore.$state.files.map((file) => file.name)
   console.log("fileNames:", fileNames)
+  shouldStop = false // Reset the interruption flag
+  interruptController = new AbortController()
 
-  const chunks = splitIntoChunks(fileNames, 10)
+  const chunks = splitIntoChunks(fileNames, 30)
 
   for (let chunk of chunks) {
     if (shouldStop) {
@@ -56,20 +65,8 @@ const submitToGemini = async () => {
     }
 
     try {
-      const response = await callGeminiAPI(combinedInput)
-      console.log("API Response:", response)
-
-      let renamingRules = JSON.parse(response) // Parse the response to a JSON object
-      Object.keys(renamingRules).forEach((key) => {
-        const value = renamingRules[key]
-        if (typeof value === "string") {
-          // Replace characters that are not allowed in Windows and Mac file names with _
-          renamingRules[key] = value.replace(/[<>:"\/\\|?*\x00-\x1F\s]/g, "_")
-        }
-      })
-      console.log("renamingRules:", renamingRules)
-
-      fileStore.applyRenamingRules(renamingRules) // Apply the renaming rules to the file store
+      await callGeminiAPI(combinedInput, fileStore, interruptController.signal)
+      // No need to apply renaming rules here, as it will be done in callGeminiAPI
     } catch (error) {
       console.error("Error processing Gemini API response:", error)
     }
@@ -81,8 +78,10 @@ const submitToGemini = async () => {
 const interruptLoading = () => {
   loading.value = false
   shouldStop = true
+  if (interruptController) {
+    interruptController.abort()
+  }
 }
-
 function mapRenamingRulesToOptions(rules) {
   // Transform renaming rules into the expected options format
   return Object.entries(rules).map(([originalName, newName]) => ({
@@ -99,3 +98,34 @@ function splitIntoChunks(array, chunkSize) {
   return chunks
 }
 </script>
+<style lang="less" scoped>
+.el-textarea__inner {
+  min-width: 300px;
+  height: 200px; /* 设置文本区域的高度 */
+  resize: none; /* 禁止用户调整文本区域的大小 */
+  overflow-y: auto; /* 滚动条自动出现 */
+  align-items: flex-start; /* 垂直顶部对齐 */
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  padding-right: 20px;
+}
+
+.button-container {
+  margin-top: 15px;
+}
+
+.ai-thinking-container {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-top: 10px;
+}
+
+.stop-button {
+  margin-left: 10px;
+}
+</style>

@@ -1,55 +1,89 @@
 <template>
-  <div class="postion-select">
-    <el-select v-model="position" placeholder="删除/替换字符的位置">
-      <el-option v-for="item in positionOptions" :key="item.value" :label="item.label" :value="item.value" />
+  <div class="position-select">
+    <el-select v-model="position" placeholder="Position for Deleting/Replacing Characters">
+      <el-option
+        v-for="item in positionOptions"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value" />
     </el-select>
 
-    <el-input-number v-show='["nCharAfterIndexM", "nCharBeforeIndexM"].includes(position)' style="width: 220px;"
-      v-model="postionIndex" :min="0" placeholder="设置 M 的取值"></el-input-number>
+    <el-input-number
+      v-show="['nCharAfterIndexM', 'nCharBeforeIndexM'].includes(position)"
+      style="width: 220px"
+      v-model="positionIndex"
+      :min="0"
+      placeholder="Set the value of M"></el-input-number>
 
-    <el-input v-show='["string", "allAfterStr", "allBeforeStr", "nAfterStr", "nBeforeStr"].includes(position)'
-      style="width: 360px;" v-model="postionStr" placeholder="设置字符串 XX 的取值"></el-input>
+    <el-input
+      v-show="
+        ['string', 'allAfterStr', 'allBeforeStr', 'nAfterStr', 'nBeforeStr'].includes(position)
+      "
+      style="width: 360px"
+      v-model="positionStr"
+      placeholder="Set the value of string XX"></el-input>
 
     <el-input-number
-      v-show='["frontN", "behindN", "nCharAfterIndexM", "nCharBeforeIndexM", "nAfterStr", "nBeforeStr"].includes(position)'
-      style="width: 220px;" v-model="strLengh" :min="0" placeholder="设置 N 的取值"></el-input-number>
+      v-show="
+        [
+          'frontN',
+          'behindN',
+          'nCharAfterIndexM',
+          'nCharBeforeIndexM',
+          'nAfterStr',
+          'nBeforeStr'
+        ].includes(position)
+      "
+      style="width: 220px"
+      v-model="strLength"
+      :min="0"
+      placeholder="Set the value of N"></el-input-number>
   </div>
-  <el-input class="insert-text" v-model="insertText" placeholder="新字符串（如果是删除，则这里留空）"></el-input>
+  <el-input
+    class="insert-text"
+    v-model="insertText"
+    placeholder="New String (Leave this empty for deletion)"></el-input>
 </template>
 
 <script lang="ts" setup>
-
-const positionOptions = [{
-  label: "指定字符串 XX",
-  value: "string"
-}, {
-  label: "前 N 个字符",
-  value: "frontN"
-}, {
-  label: "后 N 个字符",
-  value: "behindN"
-}, {
-  label: "第 M 位置后的 N 个字符",
-  value: "nCharAfterIndexM"
-}, {
-  label: "倒数 M 位置前的 N 个字符",
-  value: "nCharBeforeIndexM"
-},
-{
-  label: "XX 字符串后面的所有字符",
-  value: "allAfterStr"
-},
-{
-  label: "XX 字符串前面的所有字符",
-  value: "allBeforeStr"
-}, {
-  label: "XX 字符串后面的 N 个字符",
-  value: "nAfterStr"
-},
-{
-  label: "XX 字符串前面的 N 个字符",
-  value: "nBeforeStr"
-}]
+const positionOptions = [
+  {
+    label: "Specify String XX",
+    value: "string"
+  },
+  {
+    label: "First N Characters",
+    value: "frontN"
+  },
+  {
+    label: "Last N Characters",
+    value: "behindN"
+  },
+  {
+    label: "N Characters After Position M",
+    value: "nCharAfterIndexM"
+  },
+  {
+    label: "N Characters Before Position M",
+    value: "nCharBeforeIndexM"
+  },
+  {
+    label: "All Characters After String XX",
+    value: "allAfterStr"
+  },
+  {
+    label: "All Characters Before String XX",
+    value: "allBeforeStr"
+  },
+  {
+    label: "N Characters After String XX",
+    value: "nAfterStr"
+  },
+  {
+    label: "N Characters Before String XX",
+    value: "nBeforeStr"
+  }
+]
 
 const position = ref("")
 const postionIndex = ref()
@@ -69,7 +103,6 @@ watchEffect(() => {
   }
   emits("submit", options)
 })
-
 </script>
 
 <style lang="less" scoped>
@@ -77,7 +110,7 @@ watchEffect(() => {
   display: flex;
   align-items: center;
 
-  &>* {
+  & > * {
     margin-right: 12px;
   }
 }
@@ -87,5 +120,3 @@ watchEffect(() => {
   max-width: 460px;
 }
 </style>
-
-
