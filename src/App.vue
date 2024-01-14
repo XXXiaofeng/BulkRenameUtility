@@ -68,9 +68,9 @@ const checkIsMobile = () => {
         <div
           class="w-fit flex items-center my-0 mr-0 ml-3 text-2xl font-extralight tracking-tight leading-8 text-black cursor-pointer font-medium">
           <img src="/favicon.ico" alt="Logo" class="w-6 mr-2" />
-          <router-link class="" to="/" title="Bulk Rename Utility">{{
-            t("bulk-rename-utility")
-          }}</router-link>
+          <router-link class="" to="/" title="Bulk Rename Utility"
+            >Bulk Rename Utility
+          </router-link>
         </div>
 
         <div class="flex items-center gap-x-6">
@@ -87,7 +87,6 @@ const checkIsMobile = () => {
             >BLOG</router-link
           >
         </div>
-        <LanguageSwitcher />
       </div>
     </header>
   </div>

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import { AbortController } from "abort-controller"
 
-const apiKey = "AIzaSyDdOp7q9yJWppfASfsjgkjkRgQwetgqysc"
+const apiKey = import.meta.env.VITE_API_KEY
 const genAI = new GoogleGenerativeAI(apiKey)
 
 export async function callGeminiAPI(input, fileStore: FileStore, signal?: AbortSignal) {
@@ -16,7 +16,6 @@ export async function callGeminiAPI(input, fileStore: FileStore, signal?: AbortS
 
   console.log("input:", input)
   console.log("input.fileNames:", input.fileNames)
-
   console.log("prompt:", prompt)
 
   // Select the model
