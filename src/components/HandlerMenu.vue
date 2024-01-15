@@ -4,7 +4,7 @@
     <!-- Element-Plus的菜单组件，用于显示可拖拽的操作处理器列表 -->
     <el-menu :default-active="defaultActiveItemId" @select="onMenuSelected" mode="horizontal">
       <!-- Vue3 Smooth DnD的容器组件，用于包裹可拖拽的元素 -->
-      <Container :orientation="'horizontal'">
+      <Container @drop="onDrop" :orientation="'horizontal'">
         <!-- 使用v-for循环渲染handlers数组中的处理器列表 -->
         <Draggable v-for="handler of handlers" :key="handler.id">
           <!-- Element-Plus的菜单项，每个对应一个处理器 -->
@@ -58,11 +58,11 @@ onMounted(() => {
   defaultActiveItemId.value = list[0].id
 })
 
-// // 当元素被拖拽时执行的函数
-// const onDrop = (dropResult: any) => {
-//   // 重新排列处理器的顺序
-//   handlers.value = applyDrag(handlers.value, dropResult)
-// }
+// 当元素被拖拽时执行的函数
+const onDrop = (dropResult: any) => {
+  // 重新排列处理器的顺序
+  handlers.value = applyDrag(handlers.value, dropResult)
+}
 
 // 重新排列数组元素的函数
 const applyDrag = (arr: IRenameHandler[], dragResult: any) => {
