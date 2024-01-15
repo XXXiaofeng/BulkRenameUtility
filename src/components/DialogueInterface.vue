@@ -73,6 +73,8 @@ const submitToGemini = async () => {
 
       // ElMessage.error(error.message || `Error processing Gemini API response`)
       ElMessage.error(apiErrorReason)
+      ElMessage.error(error.message)
+      console.error(error)
     }
     await new Promise((resolve) => setTimeout(resolve, 2000))
   }
