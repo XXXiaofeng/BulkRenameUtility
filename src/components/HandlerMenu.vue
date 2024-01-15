@@ -58,11 +58,11 @@ onMounted(() => {
   defaultActiveItemId.value = list[0].id
 })
 
-// 当元素被拖拽时执行的函数
-const onDrop = (dropResult: any) => {
-  // 重新排列处理器的顺序
-  handlers.value = applyDrag(handlers.value, dropResult)
-}
+// // 当元素被拖拽时执行的函数
+// const onDrop = (dropResult: any) => {
+//   // 重新排列处理器的顺序
+//   handlers.value = applyDrag(handlers.value, dropResult)
+// }
 
 // 重新排列数组元素的函数
 const applyDrag = (arr: IRenameHandler[], dragResult: any) => {

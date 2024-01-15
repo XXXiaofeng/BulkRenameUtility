@@ -34,7 +34,7 @@
       v-model="insertText"
       placeholder="Inserted Text Content"></el-input>
 
-    <div class="insert-index-wrapper" v-show="insertContentType === 'index'">
+    <div class="insert-index-wrapper" v-show="intertContentType === 'index'">
       <el-input
         style="max-width: 240px"
         v-model="insertIndexPreText"

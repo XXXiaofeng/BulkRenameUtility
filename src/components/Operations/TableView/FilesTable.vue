@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatFileSize, formatDate } from "@/utils/formatter"
+import { formatFileSize } from "@/utils/formatter"
 import { VxeColumnPropTypes } from "vxe-table"
 
 import { useFileStore } from "@/store/files"
