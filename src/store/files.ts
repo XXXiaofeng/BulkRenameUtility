@@ -167,12 +167,12 @@ export const useFileStore = defineStore("files", () => {
     }
   }
 
-  function applyRenamingRules(renamingRules) {
+  function applyRenamingRules(renamingRules: any) {
     for (const [originalName, newName] of Object.entries(renamingRules)) {
       const file = files.value.find((f) => f.name === originalName)
       if (file) {
-        file.preview = newName
-        file.isValidName = isValidFilename(newName)
+        file.preview = newName as string
+        file.isValidName = isValidFilename(newName as string)
       }
     }
     refresh() // Refresh to trigger reactivity

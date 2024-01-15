@@ -26,4 +26,4 @@ import App from "./App.vue"
 
 const pinia = createPinia()
 
-createApp(App).use(i18n).use(pinia).use(VXETable).use(router).mount("#app") // Use the router
+createApp(App).use(pinia).use(i18n).use(VXETable).use(router).mount("#app") // Use the router

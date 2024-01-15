@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ElMessageBox } from "element-plus"
 import { useI18n } from "vue-i18n"
-const { t } = useI18n()
 
 // 创建响应式变量来控制当前的模式
 const mode = ref("simple") // 默认为简易模式

@@ -11,18 +11,18 @@
       <el-input-number
         v-show="position === 'afterIndexN' || position === 'beforeIndexN'"
         style="width: 220px"
-        v-model="positionIndex"
+        v-model="postionIndex"
         :min="0"
         placeholder="Set the value of N"></el-input-number>
       <el-input
         v-show="position === 'afterStr' || position === 'beforeStr'"
         style="width: 360px"
-        v-model="positionStr"
+        v-model="postionStr"
         placeholder="Set the value of string XX"></el-input>
     </div>
 
     <div style="margin: 12px 0">
-      <el-radio-group v-model="insertContentType">
+      <el-radio-group v-model="intertContentType">
         <el-radio-button label="text">Text</el-radio-button>
         <el-radio-button label="index">Index</el-radio-button>
       </el-radio-group>
@@ -30,7 +30,7 @@
 
     <el-input
       style="max-width: 800px"
-      v-show="insertContentType === 'text'"
+      v-show="intertContentType === 'text'"
       v-model="insertText"
       placeholder="Inserted Text Content"></el-input>
 

@@ -11,7 +11,7 @@
     <el-input-number
       v-show="['nCharAfterIndexM', 'nCharBeforeIndexM'].includes(position)"
       style="width: 220px"
-      v-model="positionIndex"
+      v-model="postionIndex"
       :min="0"
       placeholder="Set the value of M"></el-input-number>
 
@@ -20,7 +20,7 @@
         ['string', 'allAfterStr', 'allBeforeStr', 'nAfterStr', 'nBeforeStr'].includes(position)
       "
       style="width: 360px"
-      v-model="positionStr"
+      v-model="postionStr"
       placeholder="Set the value of string XX"></el-input>
 
     <el-input-number
@@ -35,7 +35,7 @@
         ].includes(position)
       "
       style="width: 220px"
-      v-model="strLength"
+      v-model="strLengh"
       :min="0"
       placeholder="Set the value of N"></el-input-number>
   </div>

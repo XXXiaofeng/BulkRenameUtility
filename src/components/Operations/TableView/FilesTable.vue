@@ -48,7 +48,6 @@
       <vxe-column
         :visible="!isOnlyPreview"
         field="modifyTime"
-        :formatter="timeFormatter"
         title="Modify Time"
         sortable
         align="center"></vxe-column>
@@ -122,14 +121,6 @@ const indexFormatter: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) =
 // 大小列格式化函数
 const sizeFormatter: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) => {
   return formatFileSize(cellValue)
-}
-
-// 时间列格式化函数
-const timeFormater: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) => {
-  if (!cellValue) {
-    return "UNKNOWN"
-  }
-  return formatDate(cellValue)
 }
 
 const isShowFolder = ref(false)

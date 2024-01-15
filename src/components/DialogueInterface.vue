@@ -65,10 +65,14 @@ const submitToGemini = async () => {
     }
 
     try {
-      await callGeminiAPI(combinedInput, fileStore, interruptController.signal)
+      await callGeminiAPI(combinedInput, interruptController.signal)
       // No need to apply renaming rules here, as it will be done in callGeminiAPI
     } catch (error) {
-      console.error("Error processing Gemini API response:", error)
+      const match = error.message.match(/alt=sse: (.*)$/)
+      const apiErrorReason = match ? match[1] : "Error processing Gemini API response"
+
+      // ElMessage.error(error.message || `Error processing Gemini API response`)
+      ElMessage.error(apiErrorReason)
     }
     await new Promise((resolve) => setTimeout(resolve, 2000))
   }
@@ -88,7 +92,21 @@ function mapRenamingRulesToOptions(rules) {
     pattern: newName
   }))
 }
+function extractReasonFromError(error) {
+  try {
+    // 尝试将错误消息解析为 JSON
+    const errorObj = JSON.parse(error.message)
 
+    // 检查是否存在 "reason" 字段
+    if (errorObj.reason) {
+      return errorObj.reason
+    }
+  } catch (e) {
+    // 如果解析失败，或者没有 "reason" 字段，则返回默认消息
+  }
+
+  return "Unknown reason" // 默认消息
+}
 function splitIntoChunks(array, chunkSize) {
   let chunks = []
   for (let i = 0; i < array.length; i += chunkSize) {
