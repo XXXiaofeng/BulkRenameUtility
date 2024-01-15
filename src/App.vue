@@ -57,6 +57,7 @@ const checkIsMobile = () => {
   <!-- 如果不是移动设备，则渲染以下内容 -->
 
   <div
+    v-if="!isMobile"
     class="fixed z-10 w-full h-12 leading-6 text-black bg-white border-t-0 border-b border-solid border-x-0 border-slate-200 bg-opacity-[0.6]"
     style="backdrop-filter: saturate(50%) contrast(2) blur(5px); border-width: 0px">
     <header
@@ -88,19 +89,23 @@ const checkIsMobile = () => {
       </div>
     </header>
   </div>
-  <router-view />
-  <Footer></Footer>
 
   <!-- 如果是移动设备，则渲染以下内容 -->
   <div class="app-mobile" v-if="isMobile">
     <!-- 工具Logo和标题 -->
-    <img class="logo" src="@/assets/icon256.ico" alt="logo" width="128" height="128" />
-    <el-text class="text">Bulk Rename Utility: Free Online File Renaming Tool with AI</el-text>
+    <div
+      class="w-fit flex items-center my-0 mr-0 ml-3 text-2xl font-extralight tracking-tight leading-8 text-black cursor-pointer font-medium">
+      <img src="/favicon.ico" alt="Logo" class="w-6 mr-2" />
+      <router-link class="" to="/" title="Bulk Rename Utility">Bulk Rename Utility </router-link>
+    </div>
+    <h1 class="p-4">Free Online File Renaming Tool with AI</h1>
     <el-text class="text"
       >This tool is not supported on mobile, please open it on your computer with the latest version
       of Chrome/Edge browser.</el-text
     >
   </div>
+  <router-view />
+  <Footer></Footer>
 </template>
 
 <style scoped>
@@ -123,14 +128,6 @@ const checkIsMobile = () => {
   justify-content: center;
 }
 
-.header1 {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: env(safe-area-inset-bottom);
-  height: 20px;
-}
-
 .footer {
   position: fixed;
   left: 0;
@@ -149,7 +146,7 @@ const checkIsMobile = () => {
 }
 
 .app-mobile {
-  height: 90vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   align-items: center;
