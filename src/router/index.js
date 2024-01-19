@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router"
-import Blog from "@/views/Blog.vue"
 import Home from "@/views/Home.vue"
 import App from "@/App.vue"
 
@@ -10,11 +9,6 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: Home
-    },
-    {
-      path: "/Blog",
-      name: "Blog",
-      component: Blog
     }
   ]
 })
