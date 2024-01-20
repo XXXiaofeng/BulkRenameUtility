@@ -74,11 +74,21 @@ const checkIsMobile = () => {
         class="text-2xl font-bold mb-5 flex justify-center mt-5 leading-6 text-center text-black">
         2. Selecting renaming method
       </div>
-      <div class="flex justify-center leading-6 text-center text-black">
-        <el-radio-group v-model="mode" class="bg-white">
-          <el-radio-button label="simple"> AI Mode </el-radio-button>
-          <el-radio-button label="advanced"> Rule Mode</el-radio-button>
-        </el-radio-group>
+      <div class="flex justify-center text-center text-black">
+        <div class="bg-white">
+          <button
+            class="px-4 py-1 border border-gray-300 focus:outline-none focus:border-transparent"
+            :class="{ 'bg-black text-white': mode === 'simple' }"
+            @click="mode = 'simple'">
+            AI Mode
+          </button>
+          <button
+            class="px-4 py-1 border border-gray-300 focus:outline-none focus:border-transparent"
+            :class="{ 'bg-black text-white': mode === 'advanced' }"
+            @click="mode = 'advanced'">
+            Rule Mode
+          </button>
+        </div>
       </div>
       <!-- 简易模式：对话界面组件 -->
       <div v-if="mode === 'simple'">
