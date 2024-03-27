@@ -22,8 +22,10 @@ export async function callGeminiAPI(input: any, signal?: AbortSignal) {
   // Select the model
   const model = genAI.getGenerativeModel({ model: "gemini-pro" })
 
-  // Use streaming for faster interaction
-  const result = await model.generateContentStream(prompt)
+  // // Use streaming for faster interaction
+  // const result = await model.generateContentStream(prompt)
+  const chat = model.startChat()
+  const result = await chat.sendMessageStream(prompt)
 
   let accumulatedLines = ""
 
