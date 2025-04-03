@@ -66,10 +66,9 @@ const checkIsMobile = () => {
       <div class="flex justify-center leading-6 text-center text-black mb-2">
         <Upload></Upload>
       </div>
-      <OperationWrapper>
+      <OperationWrapper class="max-w-full overflow-x-auto">
         <FilesTable></FilesTable>
       </OperationWrapper>
-
       <div
         class="text-2xl font-bold mb-5 flex justify-center mt-5 leading-6 text-center text-black">
         2. Selecting renaming method

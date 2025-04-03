@@ -43,12 +43,15 @@
         class-name="text-pre"
         title="File Name"
         sortable
+        width="30%"
         align="left"></vxe-column>
       <!-- Modify Time Column -->
       <vxe-column
         :visible="!isOnlyPreview"
         field="modifyTime"
         title="Modify Time"
+        :formatter="timeFormatter"
+        width="180"
         sortable
         align="center"></vxe-column>
       <!-- Size Column -->
@@ -121,6 +124,11 @@ const indexFormatter: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) =
 // 大小列格式化函数
 const sizeFormatter: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) => {
   return formatFileSize(cellValue)
+}
+
+// 时间列格式化函数
+const timeFormatter: VxeColumnPropTypes.Formatter<FileItem> = ({ cellValue }) => {
+  return new Date(cellValue).toLocaleString()
 }
 
 const isShowFolder = ref(false)

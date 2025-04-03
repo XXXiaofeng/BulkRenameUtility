@@ -1,73 +1,159 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"
 import { useFileStore } from "@/store/files"
 
-const apiKey = import.meta.env.VITE_API_KEY
-const genAI = new GoogleGenerativeAI(apiKey)
+interface RenameInput {
+  userInput: string
+  fileNames: string[]
+}
 
-export async function callGeminiAPI(input: any, signal?: AbortSignal) {
-  // Constructing the prompt
+export class ThreeZeroTwoAI {
+  private apiKey: string
+  private model: string
+  private baseURL: string
+
+  constructor(apiKey: string) {
+    console.log("[ThreeZeroTwoAI] 初始化302.ai客户端")
+    if (!apiKey) {
+      console.error("[ThreeZeroTwoAI] API Key缺失")
+      throw new Error("API Key is required")
+    }
+    this.apiKey = apiKey
+    this.model = "gemini-2.0-flash"
+    this.baseURL = "https://api.302.ai/v1"
+  }
+
+  public async generateSummary(prompt: string): Promise<Response> {
+    console.log("[ThreeZeroTwoAI] 准备发送302.ai请求")
+    console.log("[ThreeZeroTwoAI] ", prompt)
+
+    try {
+      const apiResponse = await fetch(`${this.baseURL}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.apiKey}`,
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          model: this.model,
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+          max_tokens: 2048,
+          stream: true,
+        }),
+      })
+
+      if (!apiResponse.ok) {
+        const errorText = await apiResponse.text()
+        throw new Error(
+          `302.ai请求失败: ${apiResponse.status} ${apiResponse.statusText}\n响应内容: ${errorText}`
+        )
+      }
+
+      return apiResponse
+    } catch (error) {
+      console.error("[ThreeZeroTwoAI] 请求失败:", error)
+      if (error instanceof TypeError) {
+        throw new Error(`302.ai类型错误: ${error.message}`)
+      }
+      throw error
+    }
+  }
+}
+
+const apiKey = import.meta.env.VITE_API_KEY
+const threeZeroTwoAI = new ThreeZeroTwoAI(apiKey)
+
+export async function callGeminiAPI(input: RenameInput, signal?: AbortSignal): Promise<void> {
   const fileStore = useFileStore()
 
-  const prompt = `请将以下文件列表按照要求重新命名：\n#命名要求\n'''${
-    input.userInput
-  }'''\n#文件列表\n${JSON.stringify(
-    input.fileNames,
-    null,
-    2
-  )}\n#返回格式参考以下格式\n{\n    "原始文件名称1": "重命名文件名称1",\n    "原始文件名称2": "重命名文件名称2"\n}\n#其他要求\n不要加其他任何符号和文字、不能有空格、所有字符需要符合windows和mac的文件格式要求\n请以{作为回复开头，}作为回复结尾\n不要有重复命名`
+  const prompt = `按以下规则重命名文件：
+规则：${input.userInput}
+文件：${JSON.stringify(input.fileNames)}
+要求：
+- 返回JSON格式：{"旧文件名":"新文件名"}
+- 文件名符合系统要求
+- 不含特殊字符和空格
+- 名称不重复`
+
   console.log("input:", input)
   console.log("input.fileNames:", input.fileNames)
   console.log("prompt:", prompt)
 
-  // Select the model
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+  try {
+    const response = await threeZeroTwoAI.generateSummary(prompt)
+    const reader = response.body?.getReader()
+    if (!reader) throw new Error("无法获取响应流")
 
-  // Use streaming for faster interaction
-  const result = await model.generateContentStream(prompt)
-  // const chat = model.startChat()
-  // const result = await chat.sendMessageStream(prompt)
+    let accumulatedLines = ""
 
-  let accumulatedLines = ""
+    while (true) {
+      if (signal?.aborted) {
+        console.log("Aborted due to interrupt request")
+        break
+      }
 
-  for await (const chunk of result.stream) {
-    if (signal?.aborted) {
-      console.log("Aborted due to interrupt request")
-      break
-    }
-    const chunkText = chunk.text()
-    console.log("chunkText:", chunkText)
+      const { done, value } = await reader.read()
+      if (done) break
 
-    const lines = chunkText.split("\n")
-    console.log("lines:", lines)
+      const chunkText = new TextDecoder().decode(value)
+      console.log("chunkText:", chunkText)
 
-    for (const line of lines) {
-      accumulatedLines += line
-      console.log("accumulatedLines:", accumulatedLines)
+      const lines = chunkText.split("\n")
+      console.log("lines:", lines)
 
-      // Extract key-value pairs from accumulatedLines
-      const keyValuePairs = accumulatedLines.match(/"([^"]+)":\s*"([^"]+)"[^,]*/g)
-      console.log("keyValuePairs:", keyValuePairs)
+      for (const line of lines) {
+        if (line.trim().startsWith("data: ")) {
+          const jsonData = line.replace("data: ", "").trim()
+          if (jsonData === "[DONE]") continue
 
-      if (keyValuePairs) {
-        const lastPair = keyValuePairs[keyValuePairs.length - 1]
-
-        for (const pair of keyValuePairs) {
           try {
-            const jsonPair = JSON.parse(`{${pair}}`)
-            console.log("jsonPair:", jsonPair)
+            const parsed = JSON.parse(jsonData)
+            const content = parsed.choices[0]?.delta?.content || ""
+            accumulatedLines += content
+            console.log("accumulatedLines:", accumulatedLines)
 
-            // Apply renaming rules for each key-value pair
-            fileStore.applyRenamingRules(jsonPair)
+            // 增强的JSON提取逻辑，处理可能包含非JSON字符的响应
+            const jsonMatch = accumulatedLines.match(/(?:```json\n)?\s*\{["\s\S]*?\}\s*(?:\n```)?/)
+            if (jsonMatch) {
+              let jsonStr = jsonMatch[0]
+              // 清理可能的代码块标记和前后非JSON字符
+              jsonStr = jsonStr.replace(/^```json\n|\n```$/g, '').trim()
+              
+              try {
+                // 尝试解析完整的JSON对象
+                const fullJson = JSON.parse(jsonStr)
+                console.log("完整JSON对象:", fullJson)
+                fileStore.applyRenamingRules(fullJson)
+                // 清理已处理的JSON
+                accumulatedLines = accumulatedLines.slice(
+                  accumulatedLines.indexOf(jsonStr) + jsonStr.length
+                )
+              } catch (error) {
+                console.error("完整JSON解析失败，尝试提取键值对:", error)
+                // 增强的键值对提取，处理类似示例中的格式
+                const keyValuePattern = /"([^"]+)"\s*:\s*"([^"]+)"/g
+                let match
+                while ((match = keyValuePattern.exec(jsonStr)) !== null) {
+                  try {
+                    const jsonPair = JSON.parse(`{"${match[1]}":"${match[2]}"}`)
+                    console.log("解析的键值对:", jsonPair)
+                    fileStore.applyRenamingRules(jsonPair)
+                  } catch (error) {
+                    console.error("键值对解析错误:", error)
+                  }
+                }
+                accumulatedLines = accumulatedLines.slice(keyValuePattern.lastIndex)
+              }
+            }
+            
           } catch (error) {
-            // Ignore parsing errors for individual key-value pairs
+            console.error("JSON解析错误:", error)
           }
         }
-
-        // Reset accumulatedLines to the remaining partial data after the last pair
-        accumulatedLines = accumulatedLines.slice(
-          accumulatedLines.indexOf(lastPair) + lastPair.length
-        )
       }
     }
+  } catch (error) {
+    console.error("callGeminiAPI错误:", error)
+    throw error
   }
 }
