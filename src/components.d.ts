@@ -8,8 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ActionContainer: typeof import('./components/Operations/Action/ActionContainer.vue')['default']
-    Blog: typeof import('./components/blog.vue')['default']
-    copy: typeof import('./components/Footer copy.vue')['default']
     DialogueInterface: typeof import('./components/DialogueInterface.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -21,7 +19,6 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElPopconfirm: typeof import('element-plus/es')['ElPopconfirm']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
     ElSelect: typeof import('element-plus/es')['ElSelect']
@@ -43,7 +40,6 @@ declare module 'vue' {
     PluginLoading: typeof import('./components/Utils/PluginLoading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Statistics: (typeof import("./components/Statistics.vue"))["default"]
     Upload: typeof import('./components/Upload.vue')['default']
   }
 }

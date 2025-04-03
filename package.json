@@ -22,15 +22,16 @@
     "uuid": "^9.0.1",
     "vue": "^3.2.47",
     "vue-codemirror": "^6.1.1",
+    "vue-i18n": "^9.9.0",
     "vue-router": "^4.2.5",
     "vue3-smooth-dnd": "^0.0.6",
     "vxe-table": "^4.5.14",
-    "vue-i18n": "^9.9.0",
     "xe-utils": "^3.5.14"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.152",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/lodash": "^4.17.16",
     "@types/node": "^20.10.3",
     "@types/uuid": "^9.0.7",
     "@types/wicg-file-system-access": "^2023.10.4",
@@ -46,6 +47,6 @@
     "vite": "^4.3.9",
     "vite-plugin-inspect": "^0.8.1",
     "vue-i18n": "^9.9.0",
-    "vue-tsc": "^1.4.2"
+    "vue-tsc": "^1.8.27"
   }
 }
