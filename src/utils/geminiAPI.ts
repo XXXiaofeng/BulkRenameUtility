@@ -65,15 +65,14 @@ const threeZeroTwoAI = new ThreeZeroTwoAI(apiKey)
 
 export async function callGeminiAPI(input: RenameInput, signal?: AbortSignal): Promise<void> {
   const fileStore = useFileStore()
-
-  const prompt = `按以下规则重命名文件：
-规则：${input.userInput}
-文件：${JSON.stringify(input.fileNames)}
-要求：
-- 返回JSON格式：{"旧文件名":"新文件名"}
-- 文件名符合系统要求
-- 不含特殊字符和空格
-- 名称不重复`
+  const prompt = `Rename files according to the following rules:
+Rule: ${input.userInput}
+Files: ${JSON.stringify(input.fileNames)}
+Requirements:
+- Return JSON format: {"old_filename":"new_filename"}
+- Filenames must be system-compatible
+- No special characters or spaces
+- No duplicate names`
 
   console.log("input:", input)
   console.log("input.fileNames:", input.fileNames)
