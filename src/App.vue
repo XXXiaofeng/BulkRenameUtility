@@ -1,11 +1,9 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue"
 import { ElMessageBox } from "element-plus"
+import AppHeader from "@/components/AppHeader.vue"
+import AppFooter from "@/components/AppFooter.vue"
 
-// 创建响应式变量来控制当前的模式
-const mode = ref("simple") // 默认为简易模式
-watch(mode, (newValue) => {
-  console.log("Mode changed to:", newValue)
-})
 // 使用ref来创建一个响应式变量isMobile，并初始化为false
 const isMobile = ref(false)
 
@@ -54,20 +52,28 @@ const checkIsMobile = () => {
 </script>
 
 <template>
-  <!-- 如果是移动设备，则渲染以下内容 -->
-  <div class="app-mobile" v-if="isMobile">
-    <p class="p-4 mb-20">
-      This tool is not supported on mobile, please open it on your computer with the latest version
-      of Chrome/Edge browser.
-    </p>
+  <div class="app-container min-h-screen flex flex-col">
+    <!-- 如果是移动设备，则渲染以下内容 -->
+    <div class="app-mobile" v-if="isMobile">
+      <p class="p-4 mb-20 text-center">
+        This tool is not supported on mobile, please open it on your computer with the latest version
+        of Chrome/Edge browser.
+      </p>
+    </div>
+    
+    <template v-else>
+      <AppHeader />
+      <main class="flex-grow">
+        <router-view />
+      </main>
+      <AppFooter />
+    </template>
   </div>
-  <router-view />
-  <!-- <Footer></Footer> -->
 </template>
 
 <style scoped>
 .app-mobile {
-  height: mb-20vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
