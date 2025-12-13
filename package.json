@@ -50,5 +50,8 @@
     "vite-plugin-inspect": "^0.8.1",
     "vue-i18n": "^9.9.0",
     "vue-tsc": "^1.8.27"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }
