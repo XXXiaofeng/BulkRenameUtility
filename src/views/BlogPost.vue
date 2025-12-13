@@ -82,7 +82,7 @@ const blogContent: Record<string, any> = {
       <p>When choosing a bulk rename tool, consider privacy. Cloud-based tools may upload your files to remote servers. Our Bulk Rename Utility processes everything locally in your browser – your files never leave your computer.</p>
       
       <h2>Getting Started</h2>
-      <p>Ready to organize your files? <a href="/" class="text-blue-600 hover:underline">Try Bulk Rename Utility</a> – it's free, private, and works directly in your browser.</p>
+      <p>Ready to organize your files? <a href="/" class="text-blue-600 hover:underline">Try Bulk Rename Utility</a> – it's free to use (with daily limits), private, and works directly in your browser.</p>
     `
   },
   'ai-file-organization-tips': {
@@ -129,7 +129,7 @@ const blogContent: Record<string, any> = {
       <p>Clean up your Downloads folder or organize years of accumulated files.</p>
       
       <h2>Try It Yourself</h2>
-      <p>Experience the future of file organization with our <a href="/file-organizer" class="text-blue-600 hover:underline">AI File Organizer</a> – free and completely private.</p>
+      <p>Experience the future of file organization with our <a href="/file-organizer" class="text-blue-600 hover:underline">AI File Organizer</a> – free to use (with daily limits) and completely private.</p>
     `
   },
   'photo-renaming-best-practices': {

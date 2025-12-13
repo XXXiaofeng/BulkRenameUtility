@@ -255,7 +255,7 @@
           </div>
           <div class="bg-white p-5 rounded-lg shadow-sm">
             <h3 class="font-bold text-gray-800 mb-2">Is it free?</h3>
-            <p class="text-sm text-gray-600">Yes, it's a free online tool requiring no downloads or installations.</p>
+            <p class="text-sm text-gray-600">Yes, it's a free online tool with daily limits (2 times/day, 50 files/time), requiring no downloads or installations.</p>
           </div>
           <div class="bg-white p-5 rounded-lg shadow-sm">
             <h3 class="font-bold text-gray-800 mb-2">Which browsers are supported?</h3>

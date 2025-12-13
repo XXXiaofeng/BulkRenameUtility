@@ -61,7 +61,7 @@
           <div class="space-y-4">
             <div>
               <p class="font-medium text-gray-700">Is it really free?</p>
-              <p class="text-sm text-gray-600">Yes! All features are free to use with no hidden costs.</p>
+              <p class="text-sm text-gray-600">Yes! It is free to use with daily limits. You can use the tools 2 times per day, processing up to 50 files each time.</p>
             </div>
             <div>
               <p class="font-medium text-gray-700">Is my data safe?</p>

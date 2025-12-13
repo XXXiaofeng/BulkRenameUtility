@@ -195,7 +195,7 @@
           </div>
           <div class="bg-white p-6 rounded-lg shadow-sm">
             <h3 class="font-bold text-lg text-gray-800 mb-2">Is it really free?</h3>
-            <p class="text-gray-600">Yes! AI File Organizer is completely free to use. No registration, no subscription, no hidden fees.</p>
+            <p class="text-gray-600">Yes! It is free to use with daily limits. You can use the tool 2 times per day, processing up to 50 files each time.</p>
             <!-- BMC Card -->
             <BuyMeCoffee class="mt-8" title="Unlock Pro Limits" />
           </div>
