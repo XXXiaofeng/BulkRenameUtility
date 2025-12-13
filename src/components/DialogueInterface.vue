@@ -62,9 +62,9 @@
       </div>
 
       <div v-if="remainingUsage === 0" class="limit-warning mt-4 p-4 bg-red-50 rounded-xl border border-red-200">
-        <div class="text-red-800 font-medium mb-2">⚠️ 今日使用次数已用完</div>
+        <div class="text-red-800 font-medium mb-2">⚠️ Today's usage limit has been reached.</div>
         <p class="text-sm text-gray-600 mb-3">
-          想要更多使用次数和更高的文件上限？请 Buy Me a Coffee 并附上您的邮箱，我们将为您解锁更高配额！
+          Want more usage times and higher file limits? Please Buy Me a Coffee and attach your email, we will unlock higher quotas for you!
         </p>
         <a 
           href="https://buymeacoffee.com/xiaofeng001" 
@@ -137,10 +137,10 @@ const submitToGemini = async () => {
   const usageCheck = await checkUsage('rename', fileStore.$state.files.length)
   if (!usageCheck.allowed) {
     ElMessageBox.alert(
-      usageCheck.reason + '\n\n请在 Buy Me a Coffee 中附上您的邮箱获取更高配额！',
-      '使用限制',
+      usageCheck.reason + '\n\nPlease include your email in Buy Me a Coffee to obtain a higher quota.',
+      'Usage Limit',
       { 
-        confirmButtonText: '去支持', 
+        confirmButtonText: 'Go Support', 
         type: 'warning',
         callback: () => {
           window.open('https://buymeacoffee.com/xiaofeng001', '_blank')

@@ -6,7 +6,6 @@
         <h4 v-if="variant === 'banner'" class="bmc-title">{{ title }}</h4>
         <p class="bmc-description">{{ description }}</p>
         <p v-if="showEmail" class="bmc-email-hint">
-          附上您的邮箱，我们将为您解锁更高配额 📧
         </p>
       </div>
     </div>

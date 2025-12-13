@@ -52,7 +52,7 @@
     </div>
 
     <!-- AI 分类区域 (Always visible, disabled if no files) -->
-    <div class="classification-section" :class="{ 'opacity-50 pointer-events-none': organizerStore.items.length === 0 }">
+    <div class="classification-section" :class="{ '': organizerStore.items.length === 0 }">
       <div class="text-2xl font-bold mb-5 flex justify-center mt-10 text-center">
         2. Describe Your Organization Needs
       </div>
@@ -347,10 +347,10 @@ async function generateClassification() {
   const usageCheck = await checkUsage('organize', organizerStore.fileList.length)
   if (!usageCheck.allowed) {
     ElMessageBox.alert(
-      usageCheck.reason + '\n\n请在 Buy Me a Coffee 中附上您的邮箱获取更高配额！',
-      '使用限制',
+      usageCheck.reason + '\n\nPlease provide your email on Buy Me a Coffee to unlock higher limits!',
+      'Usage Limit Reached',
       { 
-        confirmButtonText: '去支持', 
+        confirmButtonText: 'Support Us', 
         type: 'warning',
         callback: () => {
           window.open('https://buymeacoffee.com/xiaofeng001', '_blank')
