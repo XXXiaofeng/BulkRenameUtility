@@ -51,8 +51,8 @@
       </div>
     </div>
 
-    <!-- AI 分类区域 -->
-    <div v-if="organizerStore.items.length > 0" class="classification-section">
+    <!-- AI 分类区域 (Always visible, disabled if no files) -->
+    <div class="classification-section" :class="{ 'opacity-50 pointer-events-none': organizerStore.items.length === 0 }">
       <div class="text-2xl font-bold mb-5 flex justify-center mt-10 text-center">
         2. Describe Your Organization Needs
       </div>
@@ -79,13 +79,42 @@
         </div>
 
         <div class="flex justify-center mt-4 flex-col items-center">
-          <button
-            v-if="!organizerStore.isClassifying"
-            @click="generateClassification"
-            :disabled="!userPrompt.trim()"
-            class="py-2 px-8 text-white bg-black bg-opacity-80 rounded hover:bg-opacity-100 disabled:bg-gray-400 disabled:cursor-not-allowed">
-            🤖 Generate Classification Plan
-          </button>
+          <!-- Usage Info is outside the v-if/else toggle for cleaner layout or inside? -->
+          <!-- Let's keep it visible always when input is present -->
+          
+          <div v-if="!organizerStore.isClassifying" class="w-full flex flex-col items-center">
+             <!-- Usage Info -->
+            <div v-if="remainingUsage !== null" class="flex items-center justify-center gap-2 text-sm text-gray-500 mb-3">
+                <span>Today's remaining AI organizations: <span class="font-semibold" :class="remainingUsage === 0 ? 'text-red-600' : 'text-green-600'">{{ remainingUsage }}</span> / 2</span>
+                <a href="https://buymeacoffee.com/xiaofeng001" target="_blank" class="text-yellow-600 hover:text-yellow-700 inline-flex items-center gap-1" title="Support Development">
+                ☕ <span class="text-xs underline">Refill</span>
+                </a>
+            </div>
+
+            <button
+                @click="generateClassification"
+                :disabled="!userPrompt.trim() || remainingUsage === 0"
+                class="py-2 px-8 text-white bg-black bg-opacity-80 rounded hover:bg-opacity-100 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                🤖 Generate Classification Plan
+            </button>
+
+            <!-- Limit Reached Banner (Inline) -->
+            <div v-if="remainingUsage === 0" class="limit-warning mt-4 p-4 bg-red-50 rounded-xl border border-red-200 w-full max-w-xl">
+              <div class="text-red-800 font-medium mb-2 text-center">⚠️ Limit Reached</div>
+              <p class="text-sm text-gray-600 mb-3 text-center">
+                You've reached your daily AI organization limit. Upgrade to remove limits!
+              </p>
+              <div class="flex justify-center">
+                <a 
+                  href="https://buymeacoffee.com/xiaofeng001" 
+                  target="_blank"
+                  class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-black rounded-lg font-semibold hover:bg-yellow-500"
+                >
+                  ☕ Buy me a Coffee to Unlock
+                </a>
+              </div>
+            </div>
+          </div>
           
           <!-- Progress UI -->
           <div v-else class="w-full max-w-md mt-4">
@@ -144,8 +173,45 @@
         </div>
     </div>
 
-    <!-- 分类预览区域 -->
-    <div v-if="organizerStore.classificationPlan" class="preview-section fade-in">
+    <!-- 分类预览区域 (Always visible, shows example if empty) -->
+    <div class="preview-section fade-in">
+      <div v-if="!organizerStore.classificationPlan" class="example-preview opacity-60 pointer-events-none relative">
+        <div class="absolute inset-0 flex items-center justify-center z-10">
+            <div class="bg-white bg-opacity-90 p-6 rounded-xl shadow-lg border border-gray-200 text-center">
+                <div class="text-4xl mb-2">👀</div>
+                <h3 class="font-bold text-lg text-gray-800">Preview Area</h3>
+                <p class="text-gray-600">Import files and run AI to see results here</p>
+            </div>
+        </div>
+        <!-- Mock Column View for visual structure -->
+        <div class="text-2xl font-bold mb-5 flex justify-center mt-10 text-center">
+            3. Review and Adjust Classification
+        </div>
+        <div class="grid grid-cols-3 gap-4 p-4 border rounded bg-gray-50 h-64 overflow-hidden blur-sm">
+            <div class="bg-white p-4 rounded shadow border">
+                <h4 class="font-bold text-blue-600 mb-2">Images</h4>
+                <div class="space-y-2">
+                    <div class="p-2 bg-gray-50 rounded text-sm">photo1.jpg</div>
+                    <div class="p-2 bg-gray-50 rounded text-sm">vacation.png</div>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded shadow border">
+                <h4 class="font-bold text-blue-600 mb-2">Documents</h4>
+                <div class="space-y-2">
+                    <div class="p-2 bg-gray-50 rounded text-sm">resume.pdf</div>
+                    <div class="p-2 bg-gray-50 rounded text-sm">notes.txt</div>
+                </div>
+            </div>
+             <div class="bg-white p-4 rounded shadow border">
+                <h4 class="font-bold text-blue-600 mb-2">Others</h4>
+                <div class="space-y-2">
+                    <div class="p-2 bg-gray-50 rounded text-sm">archive.zip</div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div v-else>
       <div class="text-2xl font-bold mb-5 flex justify-center mt-10 text-center">
         3. Review and Adjust Classification
       </div>
@@ -184,13 +250,31 @@
           Failed: {{ organizerStore.executionProgress.failed }}
         </div>
       </div>
+      
+      <!-- Success Banner (only when execution is complete) -->
+      <div v-if="organizerStore.executionProgress && organizerStore.executionProgress.completed === organizerStore.executionProgress.total && organizerStore.executionProgress.total > 0" class="max-w-3xl mx-auto mt-6 p-4 bg-green-50 rounded-xl border border-green-200 animate-fade-in">
+        <div class="flex flex-col items-center gap-3 text-center">
+            <h3 class="text-xl font-bold text-green-800">🎉 Organization Completed!</h3>
+            <p class="text-gray-600">Your files have been neatly organized.</p>
+            
+            <div class="mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200 flex flex-col sm:flex-row items-center gap-3">
+              <span class="text-sm">☕ Enjoying the tool? Support us for unlimited usage!</span>
+              <a 
+                href="https://buymeacoffee.com/xiaofeng001" 
+                target="_blank"
+                class="px-4 py-2 bg-yellow-400 text-black rounded font-semibold text-sm hover:bg-yellow-500 whitespace-nowrap shadow-sm"
+              >Buy me a Coffee</a>
+            </div>
+        </div>
+      </div>
 
+      </div> <!-- End of v-else (real preview) -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useOrganizerStore } from '@/store/organizer'
 import { importMultipleFiles, importSingleFolder, formatFileSize, getFileIcon } from '@/utils/file-organizer'
 import { callGeminiForScalableClassification } from '@/utils/geminiAPI'
@@ -199,9 +283,11 @@ import FileOrganizerColumnView from './FileOrganizerColumnView.vue'
 import { executeClassification, verifyDirectoryPermission } from '@/utils/file-executor'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import dayjs from 'dayjs'
+import { checkUsage, recordUsage, getRemainingUsage } from '@/utils/usage-limiter'
 
 const organizerStore = useOrganizerStore()
 const userPrompt = ref('')
+const remainingUsage = ref<number | null>(null)
 const metadataOptions = reactive({
     size: false,
     lastModified: false
@@ -210,7 +296,10 @@ const metadataOptions = reactive({
 let abortController: AbortController | null = null
 let schemaReviewResolve: ((schema: ClassificationSchema) => void) | null = null
 
-// -- Import Logic --
+onMounted(async () => {
+  const usage = await getRemainingUsage()
+  remainingUsage.value = usage.organize
+})
 async function importFiles() {
   try {
     const items = await importMultipleFiles()
@@ -251,6 +340,23 @@ function clearAll() {
 async function generateClassification() {
   if (!userPrompt.value.trim()) {
     ElMessage.warning('Please enter your organization requirements')
+    return
+  }
+
+  // Check usage limits
+  const usageCheck = await checkUsage('organize', organizerStore.fileList.length)
+  if (!usageCheck.allowed) {
+    ElMessageBox.alert(
+      usageCheck.reason + '\n\n请在 Buy Me a Coffee 中附上您的邮箱获取更高配额！',
+      '使用限制',
+      { 
+        confirmButtonText: '去支持', 
+        type: 'warning',
+        callback: () => {
+          window.open('https://buymeacoffee.com/xiaofeng001', '_blank')
+        }
+      }
+    )
     return
   }
 
@@ -314,6 +420,12 @@ async function generateClassification() {
 
     organizerStore.setClassificationPlan({ categories: cleanCategories })
     ElMessage.success('Classification plan generated! Review below.')
+    
+    // Record usage here (AI Request)
+    await recordUsage('organize', organizerStore.items.length)
+    const usage = await getRemainingUsage()
+    remainingUsage.value = usage.organize
+    
   } catch (error: any) {
     console.error('Classification failed:', error)
     if (error.message !== 'Classification aborted by user') {
@@ -379,12 +491,9 @@ async function executeOrganization(dirHandle: FileSystemDirectoryHandle) {
     organizerStore.updateExecutionProgress(result.progress)
     
     if (result.success) {
-      ElMessageBox.alert('Files organized successfully!', 'Success', {
-         confirmButtonText: 'OK',
-         type: 'success'
-      }).then(() => {
-          organizerStore.clearItems()
-      })
+      ElMessage.success('Files organized successfully!')
+      // Do not clear items automatically, let user see the result
+      // But maybe disable the Execute button or change text
     } else {
         ElMessage.warning('Completed with some errors.')
     }

@@ -14,6 +14,11 @@
           🔒 100% Client-Side Processing - Your files never leave your computer
         </p>
       </div>
+      
+      <!-- BMC Banner -->
+      <div class="max-w-3xl mx-auto mb-8 w-full">
+        <BuyMeCoffee variant="banner" title="Support Development" />
+      </div>
     </div>
 
     <!-- Batch Rename Tool Section -->
@@ -195,7 +200,7 @@
               </tr>
               <tr>
                 <td class="px-6 py-4 text-gray-600">Free to Use</td>
-                <td class="px-6 py-4 text-center text-green-600 font-medium">✓ Free</td>
+                <td class="px-6 py-4 text-center text-green-600 font-medium">✓ Freemium</td>
                 <td class="px-6 py-4 text-center text-yellow-600">~ Varies</td>
                 <td class="px-6 py-4 text-center text-red-500">✗ Subscription</td>
               </tr>
@@ -269,6 +274,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import BuyMeCoffee from '@/components/BuyMeCoffee.vue'
 
 const mode = ref('simple')
 const dialogueRef = ref<any>(null)
@@ -292,12 +298,12 @@ function applyTemplate(templateType: string) {
 }
 
 onMounted(() => {
-  document.title = 'AI Bulk Rename Utility: Smart File Renaming Tool | Free Online'
+  document.title = 'AI Bulk Rename Utility: Smart File Renaming Tool | Free Plan Available'
   
   const metaDescription = document.querySelector('meta[name="description"]')
   if (metaDescription) {
     metaDescription.setAttribute('content',
-      'Free AI Bulk Rename Utility - Intelligent file renaming tool with AI and rule-based modes. 100% private, runs locally in your browser. No uploads, no installation.'
+      'AI Bulk Rename Utility (Freemium) - Intelligent file renaming tool with AI and rule-based modes. 100% private, runs locally in your browser. No uploads, no installation.'
     )
   }
   

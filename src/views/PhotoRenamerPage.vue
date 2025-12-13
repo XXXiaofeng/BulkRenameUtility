@@ -176,7 +176,7 @@
               </tr>
               <tr>
                 <td class="px-6 py-4 text-gray-600">Free to Use</td>
-                <td class="px-6 py-4 text-center text-green-600 font-medium">✓ Completely Free</td>
+                <td class="px-6 py-4 text-center text-green-600 font-medium">✓ Free Plan</td>
                 <td class="px-6 py-4 text-center text-red-500">✗ Subscription</td>
                 <td class="px-6 py-4 text-center text-yellow-600">~ Some Free</td>
               </tr>
@@ -255,6 +255,8 @@
             <p class="text-gray-600">There's no artificial limit. The tool efficiently handles thousands of files. Processing speed depends on your device's performance.</p>
           </div>
         </div>
+        <!-- BMC Card -->
+        <BuyMeCoffee class="mt-8" title="Unlock Pro Limits" />
       </div>
     </div>
   </div>
@@ -263,6 +265,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import DialogueInterface from '@/components/DialogueInterface.vue'
+import BuyMeCoffee from '@/components/BuyMeCoffee.vue'
 
 const mode = ref('simple')
 const dialogueRef = ref<any>(null)
@@ -290,7 +294,7 @@ onMounted(() => {
   const metaDescription = document.querySelector('meta[name="description"]')
   if (metaDescription) {
     metaDescription.setAttribute('content',
-      'Free Photo Renamer - Batch rename photos with date prefixes, event names, or sequential numbers. AI-powered naming suggestions. 100% private, no uploads required.'
+      'AI Photo Renamer (Free Plan)- Batch rename photos with date prefixes, event names, or sequential numbers. AI-powered naming suggestions. 100% private, no uploads required.'
     )
   }
   

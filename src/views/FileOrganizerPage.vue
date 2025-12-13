@@ -196,6 +196,8 @@
           <div class="bg-white p-6 rounded-lg shadow-sm">
             <h3 class="font-bold text-lg text-gray-800 mb-2">Is it really free?</h3>
             <p class="text-gray-600">Yes! AI File Organizer is completely free to use. No registration, no subscription, no hidden fees.</p>
+            <!-- BMC Card -->
+            <BuyMeCoffee class="mt-8" title="Unlock Pro Limits" />
           </div>
         </div>
       </div>
@@ -206,15 +208,16 @@
 <script setup lang="ts">
 import FileOrganizer from '@/components/FileOrganizer.vue'
 import { onMounted } from 'vue'
+import BuyMeCoffee from '@/components/BuyMeCoffee.vue'
 
 onMounted(() => {
   // Update meta tags for this specific page
-  document.title = 'AI File Organizer - Smart File Classification Tool | Bulk Rename Utility'
+  document.title = 'AI File Organizer: Intelligently Sort Your Files | Bulk Rename Utility'
   
   const metaDescription = document.querySelector('meta[name="description"]')
   if (metaDescription) {
     metaDescription.setAttribute('content', 
-      'Free AI File Organizer - Automatically classify and organize your files into folders using AI. 100% private, runs locally in your browser. No uploads, no installation required.'
+      'Free AI File Organizer - Automatically sort messes of files into folders using natural language. "File images into Photos folder, docs into Documents". 100% private.'
     )
   }
   

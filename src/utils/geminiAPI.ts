@@ -117,16 +117,16 @@ Requirements:
               let jsonStr = jsonMatch[0]
               // 清理可能的代码块标记和前后非JSON字符
               jsonStr = jsonStr.replace(/^```json\n|\n```$/g, '').trim()
+              // Remove any trailing commas that might cause parse errors in some JSONs
+              jsonStr = jsonStr.replace(/,\s*}/g, '}')
 
               try {
                 // 尝试解析完整的JSON对象
                 const fullJson = JSON.parse(jsonStr)
                 console.log("完整JSON对象:", fullJson)
                 fileStore.applyRenamingRules(fullJson)
-                // 清理已处理的JSON
-                accumulatedLines = accumulatedLines.slice(
-                  accumulatedLines.indexOf(jsonStr) + jsonStr.length
-                )
+                // 清理已处理的JSON (只清理匹配到的部分)
+                accumulatedLines = accumulatedLines.replace(jsonMatch[0], '')
               } catch (error) {
                 console.error("完整JSON解析失败，尝试提取键值对:", error)
                 // 增强的键值对提取，处理类似示例中的格式
@@ -141,7 +141,8 @@ Requirements:
                     console.error("键值对解析错误:", error)
                   }
                 }
-                accumulatedLines = accumulatedLines.slice(keyValuePattern.lastIndex)
+                // 清理已处理的部分防止重复 (这里只清理匹配到的)
+                accumulatedLines = accumulatedLines.replace(jsonMatch[0], '')
               }
             }
 

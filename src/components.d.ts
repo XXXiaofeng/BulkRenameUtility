@@ -10,6 +10,7 @@ declare module 'vue' {
     ActionContainer: typeof import('./components/Operations/Action/ActionContainer.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     AppHeader: typeof import('./components/AppHeader.vue')['default']
+    BuyMeCoffee: typeof import('./components/BuyMeCoffee.vue')['default']
     ClassificationPreview: typeof import('./components/ClassificationPreview.vue')['default']
     DialogueInterface: typeof import('./components/DialogueInterface.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
