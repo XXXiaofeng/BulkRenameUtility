@@ -3,7 +3,7 @@ import Home from "@/views/Home.vue"
 import App from "@/App.vue"
 
 // Lazy load pages for better performance
-const BatchRenamePage = () => import("@/views/BatchRenamePage.vue")
+// BatchRename logic moved to Home.vue
 const PhotoRenamerPage = () => import("@/views/PhotoRenamerPage.vue")
 const FileOrganizerPage = () => import("@/views/FileOrganizerPage.vue")
 const DuplicateFinderPage = () => import("@/views/DuplicateFinderPage.vue")
@@ -16,11 +16,6 @@ const router = createRouter({
       path: "/",
       name: "Home",
       component: Home
-    },
-    {
-      path: "/batch-rename",
-      name: "BatchRename",
-      component: BatchRenamePage
     },
     {
       path: "/photo-renamer",
@@ -41,6 +36,16 @@ const router = createRouter({
       path: "/file-cleaner",
       name: "FileCleaner",
       component: FileCleanerPage
+    },
+    {
+      path: "/blog",
+      name: "BlogList",
+      component: () => import("@/views/BlogList.vue")
+    },
+    {
+      path: "/blog/:slug",
+      name: "BlogPost",
+      component: () => import("@/views/BlogPost.vue")
     }
   ],
   scrollBehavior() {

@@ -9,6 +9,7 @@ export interface OrganizerItem {
     handle: FileSystemFileHandle | FileSystemDirectoryHandle
     children?: OrganizerItem[] // 如果是文件夹，包含子项
     parent?: string // 父文件夹路径
+    lastModified?: number // 上次修改时间
 }
 
 export interface CategoryInfo {

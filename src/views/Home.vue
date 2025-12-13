@@ -5,19 +5,61 @@
       <div class="px-4 pt-20 text-2xl font-bold text-center md:text-4xl lg:text-6xl">
         <h1 class="px-4">AI Bulk Rename Utility: Intelligent File Renaming Made Simple</h1>
       </div>
-      <div class="text-center text-gray-600 mt-6 mb-12 max-w-3xl mx-auto">
+      <div class="text-center text-gray-600 mt-6 mb-8 max-w-3xl mx-auto">
         <p class="text-lg">
           Transform your file organization with our intelligent solution. Powered by advanced AI technology, 
           offering smart batch renaming, file organization, and photo management for Windows and Mac.
         </p>
-        <div class="flex justify-center gap-4 mt-8 flex-wrap">
-          <router-link to="/batch-rename" class="px-8 py-3 bg-black text-white rounded-lg hover:bg-gray-800 font-semibold transition-colors">
-            🚀 Start Batch Rename
-          </router-link>
-          <router-link to="/file-organizer" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition-colors">
-            📂 Try File Organizer
-          </router-link>
+      </div>
+    </div>
+
+    <!-- Batch Rename Tool Section -->
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-20 pointer-events-auto">
+      <div class="border rounded-xl bg-white shadow-xl p-4 md:p-10">
+        <div class="text-2xl font-bold mb-5 flex justify-center text-center">
+          1. Import File or Folder
         </div>
+        <div class="flex justify-center text-center mb-6">
+          <Upload></Upload>
+        </div>
+        <OperationWrapper class="max-w-full overflow-x-auto mb-10">
+          <FilesTable></FilesTable>
+        </OperationWrapper>
+
+        <div class="text-2xl font-bold mb-5 flex justify-center text-center">
+          2. Selecting renaming method
+        </div>
+        <div class="flex justify-center text-center mb-6">
+          <div class="bg-white inline-flex rounded-md shadow-sm" role="group">
+            <button
+              type="button"
+              class="px-6 py-2 text-sm font-medium border border-gray-200 rounded-l-lg focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+              :class="mode === 'simple' ? 'bg-black text-white hover:bg-gray-800' : 'bg-white text-gray-900 hover:bg-gray-100'"
+              @click="mode = 'simple'">
+              AI Mode
+            </button>
+            <button
+              type="button"
+              class="px-6 py-2 text-sm font-medium border border-gray-200 rounded-r-lg focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+              :class="mode === 'advanced' ? 'bg-black text-white hover:bg-gray-800' : 'bg-white text-gray-900 hover:bg-gray-100'"
+              @click="mode = 'advanced'">
+              Rule Mode
+            </button>
+          </div>
+        </div>
+
+        <div v-if="mode === 'simple'">
+          <DialogueInterface></DialogueInterface>
+        </div>
+
+        <div v-else>
+          <Operations class="operation"></Operations>
+        </div>
+
+        <div class="text-2xl font-bold mb-5 flex justify-center mt-10 text-center">
+          3. Execute file renaming
+        </div>
+        <ActionContainer></ActionContainer>
       </div>
     </div>
 
@@ -25,24 +67,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-          <div class="text-4xl mb-4">📝</div>
-          <h3 class="text-xl font-bold mb-2">Batch Rename</h3>
-          <p class="text-gray-600 mb-4">Rename hundreds of files instantly with AI suggestions or custom rules like regex, numbering, and replacement.</p>
-          <router-link to="/batch-rename" class="text-blue-600 font-medium hover:underline">Go to Renamer &rarr;</router-link>
-        </div>
-        
-        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-          <div class="text-4xl mb-4">📂</div>
+          <div class="text-4xl mb-4">�</div>
           <h3 class="text-xl font-bold mb-2">AI File Organizer</h3>
           <p class="text-gray-600 mb-4">Let AI automatically categorize and organize your messy folders based on your natural language description.</p>
           <router-link to="/file-organizer" class="text-blue-600 font-medium hover:underline">Go to Organizer &rarr;</router-link>
         </div>
         
         <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
-          <div class="text-4xl mb-4">📸</div>
+          <div class="text-4xl mb-4">�</div>
           <h3 class="text-xl font-bold mb-2">Photo Renamer</h3>
           <p class="text-gray-600 mb-4">Specialized tool for photographers to rename photos by date, event, or sequence with ease.</p>
           <router-link to="/photo-renamer" class="text-blue-600 font-medium hover:underline">Go to Photo Renamer &rarr;</router-link>
+        </div>
+        
+        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow">
+          <div class="text-4xl mb-4">⚡</div>
+          <h3 class="text-xl font-bold mb-2">Fast & Secure</h3>
+          <p class="text-gray-600 mb-4">All processing happens locally in your browser. No files are ever uploaded to our servers.</p>
         </div>
       </div>
     </div>
@@ -163,7 +204,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+
+const mode = ref('simple')
 
 onMounted(() => {
   document.title = 'AI Bulk Rename Utility: Smart File Renaming Tool'
@@ -183,5 +226,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Scoped styles if needed */
+.operation {
+  flex: 1 1 0%;
+}
 </style>

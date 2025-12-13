@@ -24,6 +24,7 @@ export async function importMultipleFiles(): Promise<OrganizerItem[]> {
                 path: file.name,
                 fullPath: file.name,
                 size: file.size,
+                lastModified: file.lastModified,
                 handle: handle
             })
         }
@@ -82,6 +83,7 @@ async function handleDirectoryEntry(
                 path: currentPath ? `${currentPath}/${file.name}` : file.name,
                 fullPath: currentDisplayPath ? `${currentDisplayPath}/${file.name}` : file.name,
                 size: file.size,
+                lastModified: file.lastModified,
                 handle: fileHandle,
                 parent: currentPath
             })

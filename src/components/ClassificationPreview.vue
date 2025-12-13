@@ -34,13 +34,13 @@
           </div>
           <div class="category-actions">
             <button 
-              @click="startRenaming(categoryName)"
+              @click="startRenaming(String(categoryName))"
               class="action-btn"
               title="Rename folder">
               ✏️
             </button>
             <button 
-              @click="confirmDeleteCategory(categoryName)"
+              @click="confirmDeleteCategory(String(categoryName))"
               class="action-btn delete-btn"
               title="Delete folder">
               🗑️
@@ -55,9 +55,9 @@
         <!-- 文件列表 -->
         <div class="files-list">
           <Container
-            @drop="onDrop(categoryName, $event)"
+            @drop="onDrop(String(categoryName), $event)"
             group-name="files"
-            :get-child-payload="getChildPayload(categoryName)">
+            :get-child-payload="getChildPayload(String(categoryName))">
             <Draggable 
               v-for="(fileName, index) in categoryInfo.files" 
               :key="index">
@@ -231,7 +231,7 @@ function regenerate() {
       type: 'warning'
     }
   ).then(() => {
-    organizerStore.setClassificationPlan(null)
+    organizerStore.setClassificationPlan({ categories: {} })
     ElMessage.info('Click "Generate Classification Plan" to create a new one')
   }).catch(() => {
     // Cancelled
