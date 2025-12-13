@@ -14,6 +14,7 @@
           v-for="name in categoryNames" 
           :key="name"
           @click="selectCategory(name)"
+          @dblclick="startRenameCategory(name)"
           @drop="onDropToFolder(name, $event)"
           @dragover.prevent="onDragOverFolder(name, $event)"
           @dragleave="onDragLeaveFolder"
@@ -27,10 +28,39 @@
             <span class="mr-2 text-xl filter drop-shadow-sm">
                 {{ selectedCategory === name ? '📂' : '📁' }}
             </span>
-            <span class="truncate font-medium">{{ name }}</span>
+            <!-- Inline Edit Mode -->
+            <input 
+              v-if="editingCategory === name"
+              ref="renameInput"
+              v-model="newCategoryName"
+              @keydown.enter="confirmRenameCategory"
+              @keydown.esc="cancelRenameCategory"
+              @blur="confirmRenameCategory"
+              @click.stop
+              class="flex-1 bg-white text-gray-800 px-2 py-0.5 rounded border border-blue-400 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <span v-else class="truncate font-medium">{{ name }}</span>
+          </div>
+          <!-- Action Buttons (visible on hover) -->
+          <div 
+            v-if="editingCategory !== name"
+            class="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <button 
+              @click.stop="startRenameCategory(name)"
+              class="p-1 rounded hover:bg-gray-300 text-xs"
+              :class="selectedCategory === name ? 'text-blue-100 hover:bg-blue-500' : 'text-gray-500'"
+              title="Rename folder"
+            >✏️</button>
+            <button 
+              @click.stop="confirmDeleteCategory(name)"
+              class="p-1 rounded hover:bg-red-100 text-xs"
+              :class="selectedCategory === name ? 'text-blue-100 hover:bg-red-500 hover:text-white' : 'text-gray-500 hover:text-red-600'"
+              title="Delete folder"
+            >🗑️</button>
           </div>
           <span 
-            v-if="organizerStore.classificationPlan?.categories[name]" 
+            v-if="editingCategory !== name && organizerStore.classificationPlan?.categories[name]" 
             class="text-xs ml-2 px-1.5 py-0.5 rounded opacity-80"
             :class="selectedCategory === name ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'"
           >
@@ -40,7 +70,7 @@
       </div>
       
       <div class="p-3 border-t border-gray-200 bg-gray-100 text-xs text-gray-500 text-center">
-        Drag files to move between folders
+        Double-click folder to rename • Drag files to move
       </div>
     </div>
 
@@ -107,11 +137,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useOrganizerStore } from '@/store/organizer'
 import { getFileIcon, formatFileSize } from '@/utils/file-organizer'
 import dayjs from 'dayjs'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const organizerStore = useOrganizerStore()
 
@@ -120,6 +150,11 @@ const selectedCategory = ref<string>('')
 const selectedFiles = ref<Set<string>>(new Set())
 const lastSelectedFile = ref<string | null>(null) // For Shift+Click range selection
 const dragOverCategory = ref<string | null>(null)
+
+// Rename state
+const editingCategory = ref<string | null>(null)
+const newCategoryName = ref<string>('')
+const renameInput = ref<HTMLInputElement | null>(null)
 
 // Computed
 const categoryNames = computed(() => {
@@ -142,8 +177,78 @@ watch(() => categoryNames.value, (names) => {
 
 // Methods
 function selectCategory(name: string) {
+    if (editingCategory.value) return // Don't switch while editing
     selectedCategory.value = name
     clearSelection()
+}
+
+function startRenameCategory(name: string) {
+    editingCategory.value = name
+    newCategoryName.value = name
+    nextTick(() => {
+        renameInput.value?.focus()
+        renameInput.value?.select()
+    })
+}
+
+function confirmRenameCategory() {
+    if (!editingCategory.value) return
+    
+    const oldName = editingCategory.value
+    const newName = newCategoryName.value.trim()
+    
+    if (!newName) {
+        ElMessage.warning('Folder name cannot be empty')
+        cancelRenameCategory()
+        return
+    }
+    
+    if (newName !== oldName) {
+        if (categoryNames.value.includes(newName)) {
+            ElMessage.error('A folder with this name already exists')
+            cancelRenameCategory()
+            return
+        }
+        
+        organizerStore.renameCategory(oldName, newName)
+        
+        // Update selected Category if it was renamed
+        if (selectedCategory.value === oldName) {
+            selectedCategory.value = newName
+        }
+        
+        ElMessage.success(`Renamed to "${newName}"`)
+    }
+    
+    editingCategory.value = null
+    newCategoryName.value = ''
+}
+
+function cancelRenameCategory() {
+    editingCategory.value = null
+    newCategoryName.value = ''
+}
+
+function confirmDeleteCategory(name: string) {
+    const filesCount = organizerStore.classificationPlan?.categories[name]?.files.length || 0
+    
+    ElMessageBox.confirm(
+        filesCount > 0 
+            ? `Delete folder "${name}" and remove ${filesCount} file(s) from classification?` 
+            : `Delete empty folder "${name}"?`,
+        'Confirm Delete',
+        {
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+        }
+    ).then(() => {
+        organizerStore.removeCategory(name)
+        if (selectedCategory.value === name) {
+            selectedCategory.value = categoryNames.value[0] || ''
+        }
+        ElMessage.success(`Deleted folder "${name}"`)
+    }).catch(() => {})
 }
 
 function getFileSize(fileName: string) {

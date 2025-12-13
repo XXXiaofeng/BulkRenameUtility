@@ -11,9 +11,9 @@
 
       <nav class="hidden md:flex items-center gap-x-6">
         <router-link to="/" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Home</router-link>
-        <router-link to="/batch-rename" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Batch Rename</router-link>
         <router-link to="/file-organizer" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">File Organizer</router-link>
         <router-link to="/photo-renamer" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Photo Renamer</router-link>
+        <router-link to="/blog" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Blog</router-link>
       </nav>
 
       <!-- Mobile Menu Button -->
@@ -50,9 +50,9 @@
     <div v-if="isMenuOpen" class="md:hidden bg-white border-t border-gray-100 py-2">
       <div class="flex flex-col space-y-2 px-4">
         <router-link to="/" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Home</router-link>
-        <router-link to="/batch-rename" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Batch Rename</router-link>
         <router-link to="/file-organizer" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">File Organizer</router-link>
         <router-link to="/photo-renamer" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Photo Renamer</router-link>
+        <router-link to="/blog" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Blog</router-link>
       </div>
     </div>
   </header>

@@ -76,7 +76,7 @@
         </div>
 
         <div v-if="mode === 'simple'">
-          <DialogueInterface></DialogueInterface>
+          <DialogueInterface ref="dialogueRef"></DialogueInterface>
         </div>
 
         <div v-else>
@@ -265,16 +265,23 @@ import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const mode = ref('simple')
+const dialogueRef = ref<any>(null)
 
 function applyPhotoTemplate(templateType: string) {
   const templates: Record<string, string> = {
     'date': 'Add "YYYY-MM-DD_" prefix to each file name based on modification date',
-    'event': 'Rename files to "EventName_001, EventName_002, EventName_003..." (ask user for event name)',
-    'sequence': 'Rename all files to "Photo_0001, Photo_0002, Photo_0003..." with leading zeros'
+    'event': 'Rename files to "Wedding_001, Wedding_002, Wedding_003..." format with sequential numbering',
+    'sequence': 'Rename all files to "Photo_0001, Photo_0002, Photo_0003..." with 4-digit leading zeros'
   }
   
-  // This is a placeholder - in real implementation, this would integrate with DialogueInterface
-  ElMessage.info('Template: ' + templates[templateType])
+  const text = templates[templateType]
+  if (dialogueRef.value && dialogueRef.value.setUserInput) {
+    dialogueRef.value.setUserInput(text)
+    ElMessage.success('Template applied! Click Submit to rename files.')
+  } else {
+    ElMessage.info('Please switch to AI Mode first, then try again.')
+    mode.value = 'simple'
+  }
 }
 
 onMounted(() => {

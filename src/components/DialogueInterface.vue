@@ -24,17 +24,35 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue"
+import { ref, watch, defineProps, defineExpose } from "vue"
 import { useFileStore } from "@/store/files"
 import { callGeminiAPI } from "../utils/geminiAPI"
 import { useRenameHandler } from "./Operations/Handlers/handler.flow"
 
+const props = defineProps({
+  initialPrompt: {
+    type: String,
+    default: ''
+  }
+})
+
 const fileStore = useFileStore()
-const userInput = ref("")
+const userInput = ref(props.initialPrompt || "")
 const renamedFiles = ref([])
 const loading = ref(false)
 let interruptController = null
 let shouldStop = false
+
+// Expose method to set user input from parent
+function setUserInput(text) {
+  userInput.value = text
+}
+defineExpose({ setUserInput, userInput })
+
+// Watch for prop changes
+watch(() => props.initialPrompt, (val) => {
+  if (val) userInput.value = val
+})
 
 watch(
   () => fileStore.$state.files,

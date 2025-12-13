@@ -46,6 +46,16 @@ const router = createRouter({
       path: "/blog/:slug",
       name: "BlogPost",
       component: () => import("@/views/BlogPost.vue")
+    },
+    {
+      path: "/privacy",
+      name: "Privacy",
+      component: () => import("@/views/PrivacyPage.vue")
+    },
+    {
+      path: "/contact",
+      name: "Contact",
+      component: () => import("@/views/ContactPage.vue")
     }
   ],
   scrollBehavior() {
