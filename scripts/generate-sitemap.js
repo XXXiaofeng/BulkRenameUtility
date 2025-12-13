@@ -22,12 +22,6 @@ const pages = [
         lastmod: new Date().toISOString().split('T')[0]
     },
     {
-        path: '/batch-rename',
-        priority: '0.9',
-        changefreq: 'monthly',
-        lastmod: new Date().toISOString().split('T')[0]
-    },
-    {
         path: '/photo-renamer',
         priority: '0.8',
         changefreq: 'monthly',
@@ -48,6 +42,24 @@ const pages = [
     {
         path: '/file-cleaner',
         priority: '0.7',
+        changefreq: 'monthly',
+        lastmod: new Date().toISOString().split('T')[0]
+    },
+    {
+        path: '/about',
+        priority: '0.6',
+        changefreq: 'monthly',
+        lastmod: new Date().toISOString().split('T')[0]
+    },
+    {
+        path: '/privacy',
+        priority: '0.5',
+        changefreq: 'monthly',
+        lastmod: new Date().toISOString().split('T')[0]
+    },
+    {
+        path: '/contact',
+        priority: '0.6',
         changefreq: 'monthly',
         lastmod: new Date().toISOString().split('T')[0]
     }

@@ -13,6 +13,7 @@
         <router-link to="/" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Home</router-link>
         <router-link to="/file-organizer" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">File Organizer</router-link>
         <router-link to="/photo-renamer" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Photo Renamer</router-link>
+        <router-link to="/about" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">About</router-link>
         <router-link to="/blog" class="text-gray-600 hover:text-black font-medium transition-colors" active-class="text-black font-bold">Blog</router-link>
       </nav>
 
@@ -52,6 +53,7 @@
         <router-link to="/" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Home</router-link>
         <router-link to="/file-organizer" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">File Organizer</router-link>
         <router-link to="/photo-renamer" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Photo Renamer</router-link>
+        <router-link to="/about" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">About</router-link>
         <router-link to="/blog" class="text-gray-600 hover:text-black py-2" @click="isMenuOpen = false">Blog</router-link>
       </div>
     </div>
