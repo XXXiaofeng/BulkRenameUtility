@@ -1,4 +1,7 @@
 {
+  "buildCommand": "pnpm run build",
+  "installCommand": "pnpm install",
+  "framework": "vite",
   "functions": {
     "api/prerender.ts": {
       "maxDuration": 30
