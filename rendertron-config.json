@@ -1,0 +1,18 @@
+{
+  "cache": "memory",
+  "cacheConfig": {
+    "cacheMaxEntries": 1000,
+    "cacheLifetimeMs": 86400000
+  },
+  "timeout": 30000,
+  "port": 3000,
+  "width": 1280,
+  "height": 720,
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (compatible; Rendertron/3.0; +http://rendertron.com)"
+  },
+  "closeBrowser": false,
+  "restrictedUrlPattern": null,
+  "enableServiceWorkerScriptCache": true,
+  "cacheRefreshLifetimeMs": 86400000
+}

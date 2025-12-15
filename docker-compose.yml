@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  rendertron:
+    image: ghcr.io/justinribeiro/rendertron:latest
+    container_name: rendertron
+    ports:
+      - "3000:3000"
+    environment:
+      - CACHE_MAX_SIZE=1000
+      - CACHE_LIFETIME=86400
+      - CACHE_REFRESH_LIFETIME=86400
+      - TIMEOUT=30000
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - seo-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-seo
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - rendertron
+    restart: unless-stopped
+    networks:
+      - seo-network
+
+networks:
+  seo-network:
+    driver: bridge
