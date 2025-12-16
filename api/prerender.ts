@@ -1,113 +1,92 @@
-// Vercel Edge Function for prerendering
 import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-// 搜索引擎爬虫 User-Agent 列表
-const BOT_USER_AGENTS = [
-  'googlebot',
-  'bingbot',
-  'slurp',
-  'duckduckbot',
-  'baiduspider',
-  'yandexbot',
-  'facebookexternalhit',
-  'twitterbot',
-  'linkedinbot',
-  'whatsapp',
-  'slackbot',
-  'telegrambot',
-  'discordbot'
-];
+// Set aggressive CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
 
-// 检查是否为爬虫
-function isBot(userAgent: string): boolean {
-  if (!userAgent) return false;
-  const ua = userAgent.toLowerCase();
-  return BOT_USER_AGENTS.some(bot => ua.includes(bot));
-}
+export default async function handler(
+  request: VercelRequest,
+  response: VercelResponse
+) {
+  // Handle OPTIONS request
+  if (request.method === 'OPTIONS') {
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.setHeader(key, value);
+    });
+    return response.status(200).end();
+  }
 
-export default async function handler(request: Request): Promise<Response> {
   try {
-    const userAgent = request.headers.get('user-agent') || '';
-    const url = new URL(request.url);
-    const path = url.searchParams.get('path') || '/';
+    const { path } = request.query;
 
-    // 如果不是爬虫，返回错误
-    if (!isBot(userAgent)) {
-      return new Response('Not Found', {
-        status: 404,
-        headers: {
-          'Content-Type': 'text/plain'
-        }
-      });
+    if (!path || typeof path !== 'string') {
+      return response.status(400).send('Missing path parameter');
     }
 
-    // 构建完整的 URL
-    const protocol = url.protocol;
-    const host = url.host;
-    const fullUrl = `${protocol}//${host}${path}`;
+    // Configure chromium
+    // We need to point to a valid chromium executable. 
+    // @sparticuz/chromium provides the path to the binary.
 
-    console.log(`[Prerender] Bot detected: ${userAgent}`);
-    console.log(`[Prerender] Rendering: ${fullUrl}`);
+    // NOTE: In Vercel Serverless Functions (Node.js), we need to handle the executable path carefully.
+    // Local development vs Production
+    const executablePath = await chromium.executablePath() || '/usr/bin/google-chrome-stable';
 
-    // 由于 Edge Functions 的限制，我们返回一个简化的 HTML
-    // 在实际部署中，你可以使用外部预渲染服务
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>批量重命名工具 - Bulk Rename Utility</title>
-    <meta name="description" content="免费的批量文件重命名工具，支持多种重命名规则">
-    <meta name="keywords" content="批量重命名, 文件重命名, rename, bulk rename">
-</head>
-<body>
-    <h1>批量重命名工具</h1>
-    <p>这是一个专业的批量文件重命名工具，支持：</p>
-    <ul>
-        <li>批量重命名文件</li>
-        <li>照片重命名</li>
-        <li>重复文件查找</li>
-        <li>文件整理</li>
-    </ul>
-    <p>访问我们的网站体验完整功能。</p>
-    <script>
-        // 如果是真实用户，重定向到主应用
-        if (!navigator.userAgent.toLowerCase().includes('bot')) {
-            window.location.href = '${path}';
-        }
-    </script>
-</body>
-</html>`;
+    const browser = await puppeteer.launch({
+      args: (chromium as any).args,
+      defaultViewport: (chromium as any).defaultViewport,
+      executablePath,
+      headless: (chromium as any).headless,
+      ignoreHTTPSErrors: true,
+    } as any);
 
-    // 返回预渲染的 HTML
-    return new Response(html, {
-      status: 200,
-      headers: {
-        'Content-Type': 'text/html',
-        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        'X-Prerendered': 'true'
-      }
+    const page = await browser.newPage();
+
+    // Set a meaningful User-Agent so we don't look like a generic bot, 
+    // or keep default to look like Chrome
+    await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36');
+
+    // Interpret the path. If it's a full URL, use it. If it's a relative path, construct the URL.
+    // The middleware passes the full request.url in 'path'.
+    let targetUrl = path;
+    if (!targetUrl.startsWith('http')) {
+      // Fallback if something weird was passed. 
+      // We assume the host processing this request is the target host if not specified
+      const host = request.headers.host;
+      const protocol = request.headers['x-forwarded-proto'] || 'https';
+      targetUrl = `${protocol}://${host}${path}`;
+    }
+
+    console.log(`[Prerender] Visiting: ${targetUrl}`);
+
+    await page.goto(targetUrl, {
+      waitUntil: 'networkidle0', // Wait until network is idle
+      timeout: 30000 // 30s timeout
     });
+
+    // Extract the HTML
+    const html = await page.content();
+
+    await browser.close();
+
+    // Cache the result
+    response.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      response.setHeader(key, value);
+    });
+
+    return response.status(200).send(html);
 
   } catch (error) {
     console.error('[Prerender] Error:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Prerender failed',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      }), {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+    return response.status(500).json({
+      error: 'Prerender failed',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 }
-
-// 导出配置
-export const config = {
-  runtime: 'edge',
-  regions: ['all'] // 部署到所有边缘节点
-};

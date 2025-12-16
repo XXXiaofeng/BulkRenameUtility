@@ -8,20 +8,20 @@ echo "🚀 开始部署 Vercel SEO 优化方案..."
 # 1. 检查是否已安装 Vercel CLI
 if ! command -v vercel >/dev/null 2>&1; then
     echo "📦 安装 Vercel CLI..."
-    npm install -g vercel
+    pnpm add -g vercel
 fi
 
 # 2. 安装依赖
 echo "📦 安装依赖..."
-npm install
+pnpm install
 
 # 3. 构建项目
 echo "🔨 构建项目..."
-npm run build
+pnpm run build
 
 # 4. 生成站点地图
 echo "🗺️  生成站点地图..."
-npm run generate:sitemap
+pnpm run generate:sitemap
 
 # 5. 部署到 Vercel
 echo "🌩️  部署到 Vercel..."
